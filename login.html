@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login UEH</title>
+<link href="https://fonts.googleapis.com/css2?family=Rokkitt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body {
+    font-family: 'Rokkitt', serif;
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+}
+
+.login-container {
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Left image */
+.login-container .left {
+    flex: 2;
+}
+.login-container .left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Right form */
+.login-container .right {
+    flex: 1;
+    padding: 40px 30px;
+}
+
+.login-container .right img.logo {
+    display: block;
+    margin: 0 auto 20px;
+    height: 60px;
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+.tabs button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+
+    /* ÉP FONT ROKKITT */
+    font-family: 'Rokkitt', serif;
+    font-size: 1rem;
+    font-weight: 500;
+
+    transition: 0.3s;
+}
+.tabs button.active {
+    border-bottom: 2px solid #006571;
+    color: #006571;
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    font-family: 'Rokkitt', serif;
+    font-weight: 500;
+}
+
+.password-wrapper {
+    position: relative;
+}
+.password-wrapper .toggle-pass {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+/* Checkbox */
+.checkbox {
+    display: flex;
+    align-items: center;   /* CĂN GIỮA THEO CHIỀU DỌC */
+    gap: 8px;
+    font-size: 0.85rem;
+}
+.checkbox input {
+    width: 16px;
+    height: 16px;
+    margin = 0;
+}
+
+/* Forgot password */
+.forgot {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #000;
+    text-decoration: none;
+}
+
+/* Submit button */
+button.submit-btn {
+    padding: 12px;
+    background: #006571;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Rokkitt', serif;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: 0.3s;
+}
+button.submit-btn:hover {
+    background: #ff7f50;
+}
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-pass {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    opacity: 0.75;
+    transition: 0.2s;
+}
+
+.toggle-pass:hover {
+    opacity: 1;
+}
+
+.remember-wrapper {
+    margin: 10px 0;
+}
+
+.remember {
+    display: flex;
+    align-items: center;           /* CANH GIỮA CHỮ */
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: 'Rokkitt', serif;
+    color: #000;
+}
+
+/* Ẩn checkbox mặc định */
+.remember input {
+    display: none;
+}
+
+/* Ô checkbox vuông */
+.checkmark {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid #666;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dấu tick */
+.checkmark::after {
+    content: '';
+    width: 8px;
+    height: 4px;
+    border-left: 2px solid #006571;
+    border-bottom: 2px solid #006571;
+    transform: rotate(-45deg);
+    opacity: 0;
+}
+
+/* Khi được check */
+.remember input:checked + .checkmark::after {
+    opacity: 1;
+}
+
+/* Text */
+.remember-text {
+    line-height: 1;     /* QUAN TRỌNG để không lệch */
+}
+
+
+/* Responsive */
+@media(max-width:900px){
+    .login-container{
+        flex-direction: column;
+    }
+    .login-container .left{
+        height: 200px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+
+    <!-- Left image -->
+    <div class="left">
+        <img src="UEH_LOGIN.PNG" alt="UEH Campus">
+    </div>
+
+    <!-- Right form -->
+    <div class="right">
+        <img src="UEH_LOGO.png" alt="UEH Logo" class="logo">
+        <h2>Xác minh tài khoản UEH để sử dụng các ứng dụng của UEH<br>DÀNH CHO CÁN BỘ VIÊN CHỨC</h2>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="active" data-tab="account">Account</button>
+            <button data-tab="email">Email UEH</button>
+            <button data-tab="office">Office 365</button>
+        </div>
+
+        <form id="loginForm">
+            <label for="username">Tài khoản/ Account</label>
+            <input type="text" id="username" required>
+
+            <label for="password">Mật khẩu/ Password</label>
+            <div class="password-wrapper">
+    		<input type="password" id="password" required>
+    		<img 
+        		src="CLOSEEYE.png"
+        		id="togglePassword"
+        		class="toggle-pass"
+        		alt="Toggle password"
+    		>	
+	    </div>
+
+            <div class="remember-wrapper">
+    		<label class="remember">
+        		<input type="checkbox" id="remember">
+        		<span class="checkmark"></span>
+        		<span class="remember-text">Nhớ đăng nhập/Remember me?</span>
+    		</label>
+	    </div>
+
+            <a href="#" class="forgot">Quên mật khẩu/ Forgot Password?</a>
+
+            <button type="submit" class="submit-btn">Đăng nhập/ Sign in</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+const toggle = document.getElementById('togglePassword');
+const password = document.getElementById('password');
+
+toggle.addEventListener('click', () => {
+    if (password.type === 'password') {
+        password.type = 'text';
+        toggle.src = 'OPENEYE.png';       // bỏ gạch
+    } else {
+        password.type = 'password';
+        toggle.src = 'CLOSEEYE.png'; // có gạch
+    }
+});
+
+// Tab switching (demo, chỉ thay đổi active)
+const tabs = document.querySelectorAll('.tabs button');
+tabs.forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+        tabs.forEach(t=>t.classList.remove('active'));
+        tab.classList.add('active');
+    });
+});
+
+document.getElementById('loginForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+
+    // TODO: thêm kiểm tra tài khoản/mật khẩu thực tế nếu cần
+    // Ví dụ demo thì luôn chuyển
+    window.location.href = 'Dashboard.html';
+});
+</script>
+
+</body>
+</html>

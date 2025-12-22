@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VSTEP UEH</title>
+<link href="https://fonts.googleapis.com/css2?family=Francois+One&family=Rokkitt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* ===== Font mặc định: Rokkitt ===== */
+body{
+    min-height:100vh;
+    background:#006571;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-family:'Rokkitt', serif;
+}
+
+/* ===== Layout ===== */
+.wrapper{
+    width:90%;
+    max-width:1200px;
+}
+
+.header{
+    position: relative; /* thay vì absolute */
+    display: flex;
+    justify-content: center; /* canh giữa theo ngang */
+    margin-top: 10px;      /* khoảng cách từ trên */
+}
+
+.logo{
+    height:80px;
+}
+
+/* ===== Hero ===== */
+.hero{
+    display:grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap:30px;
+    align-items:start; /* đổi từ center sang start để nhích xuống */
+    padding-top: 70px; /* nhích toàn bộ hero xuống */
+}
+
+/* ===== TIÊU ĐỀ: Francois One ===== */
+.hero h1{
+    font-family:'Francois One', sans-serif;
+    font-size:2.5rem;
+    font-weight:400;
+    line-height:1.3;
+    margin-bottom:40px; /* giảm margin để nút gần hơn */
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+}
+
+/* ===== Button ===== */
+.btn-container{
+    display: flex;
+    justify-content: center; /* canh giữa theo ngang */
+    margin-top: 20px;        /* khoảng cách giữa tiêu đề và nút */
+}
+
+.btn-login {
+    display: flex;               /* chuyển thành flex */
+    align-items: center;         /* canh giữa theo chiều dọc */
+    justify-content: center;     /* canh giữa theo chiều ngang */
+    padding: 16px 45px;          /* giữ padding như cũ */
+    background: #ffffff;
+    color: #0b5d63;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-family: 'Rokkitt', serif;
+    text-align: center;          /* an toàn cho chữ nhiều dòng */
+}
+
+.btn-login:hover{
+    background: #ff7f50;  /* cam */
+    color: #ffffff;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+/* ===== Image ===== */
+.hero img{
+    width:100%;
+    border-radius:16px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.35);
+    margin-top:10px; /* nhích hình xuống */
+}
+
+/* ===== Responsive ===== */
+@media(max-width:900px){
+    .hero{
+        grid-template-columns:1fr;
+        text-align:center;
+        padding-top:50px;
+    }
+    .hero h1{
+        font-size:2.3rem;
+    }
+    .hero img{
+        margin-top:30px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+<div class="wrapper">
+
+    <!-- Logo -->
+    <div class="header">
+        <img src="LOGO.png" alt="UEH Logo" class="logo">
+    </div>
+
+    <!-- Hero section -->
+    <div class="hero">
+
+        <!-- Left -->
+        <div>
+            <h1>
+                HỆ THỐNG QUẢN LÝ TỔ CHỨC KỲ THI ĐÁNH GIÁ NĂNG LỰC NGOẠI NGỮ THEO KHUNG BẬC 3-5 TRÊN MÁY TÍNH THEO KHUNG NĂNG LỰC NGOẠI NGỮ 6 BẬC DÙNG CHO VIỆT NAM
+            </h1>
+
+            <a href="login.html" class="btn-login">
+                Đăng nhập
+            </a>
+        </div>
+
+        <!-- Right -->
+        <div>
+            <img src="HERO.JPG" alt="Sinh viên UEH">
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

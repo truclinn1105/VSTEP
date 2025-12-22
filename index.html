@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>UEH Exam Management System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Rokkitt:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rokkitt', serif;
+}
+
+body {
+    background: #f4f6f8;
+    display: flex;
+    height: 100vh;
+    overflow-x: hidden;
+}
+  
+/* ================= SIDEBAR ================= */
+.sidebar {
+    width: 260px;
+    background: #006571;
+    color: #fff;
+    padding-top: 20px;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 15px;
+}
+
+.logo img {
+    max-width: 80px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 14px 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+.sidebar li:hover,
+.sidebar li.active {
+    background: #00838f;
+}
+
+/* ================= MAIN ================= */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================= HEADER ================= */
+.header {
+    background: #fff;
+    padding: 14px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.header h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.user {
+    font-size: 15px;
+}
+
+/* ================= CONTENT ================= */
+.content {
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* CARD GRID */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.card {
+    background: #fff;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: 0.3s;
+    cursor: pointer;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: #006571;
+}
+
+.card p {
+    color: #555;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+}
+
+.user img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #006571;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    font-weight: 600;
+}
+
+button {
+    padding: 6px 10px;
+    border: none;
+    background: #006571;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00838f;
+}
+
+input[type="text"], input[type="file"] {
+    padding: 6px;
+}
+
+.content {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+    <div class="logo">
+        <img src="LOGO.PNG" alt="UEH Logo">
+    </div>
+
+    <ul>
+        <li class="active" data-page="hoso">🧑‍🎓 Quản lý hồ sơ thí sinh</li>
+        <li data-page="dethithu">📝 Quản lý đề thi thử</li>
+        <li data-page="kehoach">📅 Quản lý kế hoạch thi</li>
+        <li data-page="phongthi">🏫 Quản lý phòng thi</li>
+        <li data-page="phuckhao">📄 Quản lý phúc khảo</li>
+        <li data-page="ketqua">📊 Quản lý kết quả thi</li>
+        <li data-page="vipham">⚠ Quản lý vi phạm quy chế</li>
+        <li data-page="hoidong">🏛 Quản lý hội đồng kỳ thi</li>
+        <li data-page="chungchi">🎓 Quản lý chứng chỉ</li>
+        <li data-page="lichsu">🕒 Quản lý lịch sử hệ thống</li>
+        <li data-page="phanhoi">💬 Quản lý phản hồi</li>
+	<li data-page="banchucnang">🏢 Quản lý các ban chức năng</li>
+    </ul>
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h2 id="header-title">🧑‍🎓 Quản lý hồ sơ thí sinh</h2>
+        <div class="user">
+    	     <img src="AVATAR.PNG" alt="User Avatar">
+             <span>Nguyễn Văn A</span>
+	     
+	     <button id="logoutBtn" style="
+            display:block;
+            margin-top:5px;
+            padding:4px 10px;
+            font-size:14px;
+            background:#f44336;
+            color:#fff;
+            border:none;
+            border-radius:4px;
+            cursor:pointer;
+        ">Đăng xuất</button>
+	</div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content" id="content">
+    </div>
+
+</div>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+const content = document.getElementById("content");
+const headerTitle = document.getElementById("header-title");
+const menuItems = document.querySelectorAll(".sidebar li");
+
+document.getElementById("logoutBtn").addEventListener("click", function(){
+    // Nếu có session/user token, xóa tại đây
+    // localStorage.removeItem("token");
+    window.location.href = "Landing_page.html"; // Chuyển về trang Landing_page
+});
+
+
+menuItems.forEach(item => {
+        item.addEventListener("click", () => {
+            menuItems.forEach(i => i.classList.remove("active"));
+            item.classList.add("active");
+            loadPage(item.dataset.page, item.innerText);
+        });
+    });
+
+function loadPage(page, titleText) {
+    let cards = "";
+
+    switch(page) {
+        case "hoso":
+                cards = `
+                <!-- Tra cứu -->
+                <div class="card">
+                    <h3>Tra cứu thí sinh</h3>
+                    <input id="searchInput" type="text" 
+                           placeholder="Nhập mã số, họ tên, đợt thi..." 
+                           style="width:100%; padding:8px; margin-bottom:10px;">
+                    <button onclick="searchCandidate()" style="padding:8px 16px;">
+                        Tìm kiếm
+                    </button>
+                </div>
+
+                <!-- Danh sách thí sinh -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Danh sách thí sinh</h3>
+                    <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                        <thead>
+                            <tr style="background:#f0f0f0;">
+                                <th>MSSV</th>
+                                <th>Họ tên</th>
+                                <th>Đợt thi</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidateTable">
+                            <tr>
+                                <td>31230001</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>Đợt 1/2025</td>
+                                <td>Đã duyệt</td>
+                                <td>
+                                    <button onclick="viewDetail('31230001')">Xem</button>
+                                    <button onclick="editProfile('31230001')">Sửa</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>31230002</td>
+                                <td>Trần Thị B</td>
+                                <td>Đợt 1/2025</td>
+                                <td>Chờ rà soát</td>
+                                <td>
+                                    <button onclick="viewDetail('31230002')">Xem</button>
+                                    <button onclick="editProfile('31230002')">Sửa</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Chi tiết hồ sơ -->
+                <div class="card" id="detailCard">
+                    <h3>Chi tiết hồ sơ</h3>
+                    <p>Chọn thí sinh để xem chi tiết</p>
+                </div>
+
+                <!-- Cập nhật hồ sơ -->
+                <div class="card" id="editCard">
+                    <h3>Cập nhật hồ sơ</h3>
+                    <form style="display:flex; flex-direction:column; gap:10px;">
+                        <input id="editName" type="text" placeholder="Họ tên">
+                        <input id="editMSSV" type="text" placeholder="MSSV">
+                        <input type="file" id="editFile">
+                        <button type="button" onclick="saveProfile()" style="align-self:flex-start;">
+                            Lưu thay đổi
+                        </button>
+                    </form>
+                </div>
+                `;
+                break;
+
+        case "dethithu":
+    cards = `
+    <!-- Tạo đề thi -->
+    <div class="card">
+        <h3>Đăng tải đề thi</h3>
+        <form id="uploadForm" style="display:flex; flex-direction:column; gap:10px;">
+            <input type="file" id="fileInput" accept=".pdf,.docx">
+            <input type="text" id="matrixInput" placeholder="Ma trận đề (ví dụ: Nghe, Đọc, Viết, Nói)">
+            <input type="text" id="structureInput" placeholder="Cấu trúc kỹ năng">
+            <button type="button" onclick="uploadExam()">Đăng tải đề thi</button>
+        </form>
+    </div>
+
+    <!-- Danh sách đề thi -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách đề thi thử</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Mã đề</th>
+                    <th>Tên đề</th>
+                    <th>Kỳ thi</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="examTable">
+                <tr>
+                    <td>THI001</td>
+                    <td>Đề thử 1</td>
+                    <td>Đợt 1/2025</td>
+                    <td>Đã duyệt</td>
+                    <td>
+                        <button onclick="viewExamDetail('THI001')">Xem</button>
+                        <button onclick="editExam('THI001')">Sửa</button>
+                        <button onclick="deleteExam('THI001')">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>THI002</td>
+                    <td>Đề thử 2</td>
+                    <td>Đợt 1/2025</td>
+                    <td>Chờ duyệt</td>
+                    <td>
+                        <button onclick="viewExamDetail('THI002')">Xem</button>
+                        <button onclick="editExam('THI002')">Sửa</button>
+                        <button onclick="deleteExam('THI002')">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết đề thi -->
+    <div class="card" id="examDetailCard">
+        <h3>Chi tiết đề thi</h3>
+        <p>Chọn một đề thi để xem chi tiết</p>
+    </div>
+    `;
+    break;
+
+        case "kehoach":
+    cards = `
+    <!-- Tạo kế hoạch thi -->
+    <div class="card">
+        <h3>Tạo kế hoạch thi</h3>
+        <form id="planForm" style="display:flex; flex-direction:column; gap:10px;">
+            <input type="text" id="planName" placeholder="Tên kế hoạch/Đợt thi">
+            <input type="text" id="planDate" placeholder="Ngày thi (dd/mm/yyyy)">
+            <input type="text" id="planShift" placeholder="Ca thi">
+            <input type="number" id="planCandidates" placeholder="Số lượng thí sinh dự kiến">
+            <input type="text" id="planLocation" placeholder="Địa điểm">
+            <input type="text" id="planFormat" placeholder="Hình thức thi (Trên máy tính)">
+            <input type="text" id="planStructure" placeholder="Cấu trúc bài thi (Chuẩn 6 bậc)">
+            <input type="text" id="planCommittee" placeholder="Danh sách hội đồng/Tổ chức thi">
+            <button type="button" onclick="createPlan()">Tạo kế hoạch</button>
+        </form>
+    </div>
+
+    <!-- Danh sách kế hoạch thi -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách kế hoạch thi</h3>
+        <input type="text" id="searchPlanInput" placeholder="Tra cứu theo tên, ngày, trạng thái..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchPlan()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Tên kế hoạch</th>
+                    <th>Ngày thi</th>
+                    <th>Ca thi</th>
+                    <th>Số thí sinh</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="planTable">
+                <tr>
+                    <td>Đợt 1/2025</td>
+                    <td>15/01/2025</td>
+                    <td>Ca 1</td>
+                    <td>50</td>
+                    <td>Chờ duyệt</td>
+                    <td>
+                        <button onclick="viewPlanDetail('plan1')">Xem</button>
+                        <button onclick="editPlan('plan1')">Sửa</button>
+                        <button onclick="approvePlan('plan1')">Duyệt</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Đợt 2/2025</td>
+                    <td>20/02/2025</td>
+                    <td>Ca 2</td>
+                    <td>80</td>
+                    <td>Đã duyệt</td>
+                    <td>
+                        <button onclick="viewPlanDetail('plan2')">Xem</button>
+                        <button onclick="editPlan('plan2')">Sửa</button>
+                        <button onclick="approvePlan('plan2')">Duyệt</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết kế hoạch -->
+    <div class="card" id="planDetailCard">
+        <h3>Chi tiết kế hoạch thi</h3>
+        <p>Chọn kế hoạch để xem chi tiết</p>
+    </div>
+    `;
+    break;
+
+        case "phongthi":
+    cards = `
+    <!-- Tạo số báo danh -->
+    <div class="card">
+        <h3>Tạo số báo danh</h3>
+        <form id="sbdForm" style="display:flex; flex-direction:column; gap:10px;">
+            <input type="text" id="sbdBatch" placeholder="Đợt thi">
+            <input type="text" id="sbdRule" placeholder="Quy tắc đánh số (prefix, khoa, phòng)">
+            <button type="button" onclick="generateSBD()">Tạo số báo danh</button>
+        </form>
+    </div>
+
+    <!-- Chia phòng thi -->
+    <div class="card">
+        <h3>Chia phòng thi</h3>
+        <button type="button" onclick="assignRooms()">Phân phòng tự động</button>
+        <button type="button" onclick="manualAssign()">Phân phòng thủ công</button>
+    </div>
+
+    <!-- Danh sách phòng thi -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách phòng thi</h3>
+        <input type="text" id="searchRoomInput" placeholder="Tra cứu phòng theo mã, địa điểm, ca, môn..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchRoom()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Mã phòng</th>
+                    <th>Địa điểm</th>
+                    <th>Ca thi</th>
+                    <th>Môn thi</th>
+                    <th>Sức chứa</th>
+                    <th>Số thí sinh</th>
+                    <th>Giám thị</th>
+                    <th>Hình thức thi</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="roomTable">
+                <tr>
+                    <td>P001</td>
+                    <td>Phòng A101</td>
+                    <td>Ca 1</td>
+                    <td>Tiếng Anh</td>
+                    <td>50</td>
+                    <td>48</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>Máy</td>
+                    <td>Đã phân</td>
+                    <td>
+                        <button onclick="viewRoomDetail('P001')">Xem</button>
+                        <button onclick="exportRoom('P001')">Xuất</button>
+                        <button onclick="sendRoomEmail('P001')">Gửi Email</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>P002</td>
+                    <td>Phòng B202</td>
+                    <td>Ca 2</td>
+                    <td>Tiếng Anh</td>
+                    <td>60</td>
+                    <td>55</td>
+                    <td>Trần Thị B</td>
+                    <td>Máy</td>
+                    <td>Chưa phân</td>
+                    <td>
+                        <button onclick="viewRoomDetail('P002')">Xem</button>
+                        <button onclick="exportRoom('P002')">Xuất</button>
+                        <button onclick="sendRoomEmail('P002')">Gửi Email</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết phòng thi -->
+    <div class="card" id="roomDetailCard">
+        <h3>Chi tiết phòng thi</h3>
+        <p>Chọn phòng để xem chi tiết</p>
+    </div>
+    `;
+    break;
+
+        case "phuckhao":
+    cards = `
+    <!-- Danh sách yêu cầu phúc khảo -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách yêu cầu phúc khảo</h3>
+        <input type="text" id="searchRequestInput" placeholder="Tìm kiếm theo mã SV, họ tên, lớp, môn..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchRequest()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Lớp</th>
+                    <th>Môn thi</th>
+                    <th>Hình thức</th>
+                    <th>Điểm trước</th>
+                    <th>Nội dung yêu cầu</th>
+                    <th>Ngày gửi</th>
+                    <th>Trạng thái</th>
+                    <th>Người phụ trách</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="requestTable">
+                <tr>
+                    <td>31230001</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>KH1</td>
+                    <td>Tiếng Anh</td>
+                    <td>Máy</td>
+                    <td>7.5</td>
+                    <td>Kiểm tra lại phần nghe</td>
+                    <td>20/12/2025</td>
+                    <td>Đang xử lý</td>
+                    <td>Trần Thị B</td>
+                    <td>
+                        <button onclick="viewRequestDetail('31230001')">Xem</button>
+                        <button onclick="updateRequest('31230001')">Cập nhật</button>
+                        <button onclick="respondRequest('31230001')">Phản hồi</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>31230002</td>
+                    <td>Trần Thị B</td>
+                    <td>KH2</td>
+                    <td>Tiếng Anh</td>
+                    <td>Máy</td>
+                    <td>8.0</td>
+                    <td>Kiểm tra lại phần viết</td>
+                    <td>21/12/2025</td>
+                    <td>Đã có kết quả</td>
+                    <td>Nguyễn Văn C</td>
+                    <td>
+                        <button onclick="viewRequestDetail('31230002')">Xem</button>
+                        <button onclick="updateRequest('31230002')">Cập nhật</button>
+                        <button onclick="respondRequest('31230002')">Phản hồi</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết yêu cầu -->
+    <div class="card" id="requestDetailCard">
+        <h3>Chi tiết yêu cầu phúc khảo</h3>
+        <p>Chọn yêu cầu để xem chi tiết</p>
+    </div>
+`;
+    break;
+
+
+        case "ketqua":
+    cards = `
+    <!-- Danh sách kết quả thi -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách kết quả thi</h3>
+        <input type="text" id="searchResultInput" placeholder="Tìm kiếm theo mã SV, họ tên, SBD, môn..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchResult()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>SBD</th>
+                    <th>Môn thi</th>
+                    <th>Nghe</th>
+                    <th>Đọc</th>
+                    <th>Viết</th>
+                    <th>Nói</th>
+                    <th>Tổng điểm</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="resultTable">
+                <tr>
+                    <td>31230001</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>001</td>
+                    <td>Tiếng Anh</td>
+                    <td>8.0</td>
+                    <td>7.5</td>
+                    <td>7.0</td>
+                    <td>8.5</td>
+                    <td>7.75</td>
+                    <td>Đã phê duyệt</td>
+                    <td>
+                        <button onclick="viewResultDetail('31230001')">Xem</button>
+                        <button onclick="updateResult('31230001')">Nhập/Cập nhật</button>
+                        <button onclick="approveResult('31230001')">Phê duyệt</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>31230002</td>
+                    <td>Trần Thị B</td>
+                    <td>002</td>
+                    <td>Tiếng Anh</td>
+                    <td>7.5</td>
+                    <td>8.0</td>
+                    <td>7.0</td>
+                    <td>7.5</td>
+                    <td>7.5</td>
+                    <td>Chưa phê duyệt</td>
+                    <td>
+                        <button onclick="viewResultDetail('31230002')">Xem</button>
+                        <button onclick="updateResult('31230002')">Nhập/Cập nhật</button>
+                        <button onclick="approveResult('31230002')">Phê duyệt</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button onclick="exportCSV()" style="margin-top:10px;">Xuất CSV</button>
+    </div>
+
+    <!-- Chi tiết kết quả thi -->
+    <div class="card" id="resultDetailCard">
+        <h3>Chi tiết kết quả thi</h3>
+        <p>Chọn thí sinh để xem chi tiết kết quả</p>
+    </div>
+`;
+    break;
+
+
+        case "vipham":
+    cards = `
+    <!-- Danh sách thí sinh vi phạm -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách thí sinh vi phạm</h3>
+        <input type="text" id="searchStudentViolation" placeholder="Tìm kiếm theo mã SV, họ tên, phòng..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchStudentViolation()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>SBD</th>
+                    <th>Phòng thi</th>
+                    <th>Hình thức vi phạm</th>
+                    <th>Thời điểm</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="studentViolationTable">
+                <tr>
+                    <td>31230001</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>001</td>
+                    <td>101</td>
+                    <td>Copy bài</td>
+                    <td>10:15 12/12/2025</td>
+                    <td>Chưa xử lý</td>
+                    <td>
+                        <button onclick="viewViolationDetail('31230001')">Xem</button>
+                        <button onclick="updateViolation('31230001')">Cập nhật</button>
+                        <button onclick="approveViolation('31230001')">Phê duyệt</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Danh sách CBCT vi phạm -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách CBCT vi phạm</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Họ tên</th>
+                    <th>Vai trò</th>
+                    <th>Phòng thi</th>
+                    <th>Nội dung vi phạm</th>
+                    <th>Thời điểm</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="staffViolationTable">
+                <tr>
+                    <td>Trần Thị B</td>
+                    <td>Cán bộ coi thi</td>
+                    <td>102</td>
+                    <td>Không giám sát đầy đủ</td>
+                    <td>09:45 12/12/2025</td>
+                    <td>Chưa xử lý</td>
+                    <td>
+                        <button onclick="viewViolationDetail('staff102')">Xem</button>
+                        <button onclick="updateViolation('staff102')">Cập nhật</button>
+                        <button onclick="approveViolation('staff102')">Phê duyệt</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết vi phạm -->
+    <div class="card" id="violationDetailCard">
+        <h3>Chi tiết vi phạm</h3>
+        <p>Chọn một vụ vi phạm để xem chi tiết</p>
+    </div>
+`;
+    break;
+
+
+        case "hoidong":
+    cards = `
+    <!-- Danh sách hội đồng thi -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách hội đồng thi</h3>
+        <input type="text" id="searchCouncil" placeholder="Tìm kiếm theo tên hội đồng, kỳ thi..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchCouncil()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Tên hội đồng</th>
+                    <th>Kỳ thi</th>
+                    <th>Trạng thái</th>
+                    <th>Thời gian hoạt động</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="councilTable">
+                <tr>
+                    <td>Hội đồng ĐGNLNN 1</td>
+                    <td>Đợt 1/2025</td>
+                    <td>Chưa phê duyệt</td>
+                    <td>15/12/2025 – 20/12/2025</td>
+                    <td>
+                        <button onclick="viewCouncilDetail('COUNCIL001')">Xem</button>
+                        <button onclick="updateCouncil('COUNCIL001')">Sửa</button>
+                        <button onclick="approveCouncil('COUNCIL001')">Phê duyệt</button>
+                        <button onclick="downloadCouncil('COUNCIL001')">Tải CSV</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết hội đồng thi -->
+    <div class="card" id="councilDetailCard">
+        <h3>Chi tiết hội đồng thi</h3>
+        <p>Chọn một hội đồng để xem chi tiết</p>
+    </div>
+`;
+    break;
+
+
+        case "chungchi":
+    cards = `
+    <!-- Danh sách chứng chỉ -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Danh sách chứng chỉ</h3>
+        <input type="text" id="searchCertificate" placeholder="Tìm kiếm theo mã chứng chỉ, họ tên, SBD..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchCertificate()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Mã chứng chỉ</th>
+                    <th>Họ tên</th>
+                    <th>SBD</th>
+                    <th>Kỳ thi</th>
+                    <th>Trình độ</th>
+                    <th>Ngày cấp</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="certificateTable">
+                <tr>
+                    <td>CERT001</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>001</td>
+                    <td>Đợt 1/2025</td>
+                    <td>Bậc 3</td>
+                    <td>15/12/2025</td>
+                    <td>Đã phát hành</td>
+                    <td>
+                        <button onclick="viewCertificateDetail('CERT001')">Xem</button>
+                        <button onclick="issueCertificate('CERT001')">Phát hành</button>
+                        <button onclick="downloadCertificate('CERT001')">Tải PNG</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết chứng chỉ -->
+    <div class="card" id="certificateDetailCard">
+        <h3>Chi tiết chứng chỉ</h3>
+        <p>Chọn một chứng chỉ để xem chi tiết</p>
+    </div>
+`;
+    break;
+
+
+        case "lichsu":
+    cards = `
+    <!-- Lịch sử hoạt động -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Lịch sử hoạt động</h3>
+        <input type="text" id="searchActivity" placeholder="Tìm kiếm theo người dùng, hành động, chức năng..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchActivity()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <button onclick="downloadActivityCSV()" style="padding:8px 16px; margin-bottom:10px; float:right;">Tải xuống CSV</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Người thực hiện</th>
+                    <th>Vai trò</th>
+                    <th>Hành động</th>
+                    <th>Đối tượng</th>
+                    <th>Thời gian</th>
+                    <th>Kết quả</th>
+                </tr>
+            </thead>
+            <tbody id="activityTable">
+                <tr>
+                    <td>Nguyễn Văn A</td>
+                    <td>Quản trị viên</td>
+                    <td>Cập nhật kết quả thi</td>
+                    <td>Thí sinh 001</td>
+                    <td>22/12/2025 10:15</td>
+                    <td>Thành công</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Lịch sử thay đổi dữ liệu -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3>Lịch sử thay đổi dữ liệu</h3>
+        <input type="text" id="searchChange" placeholder="Tìm kiếm theo đối tượng, người thực hiện, loại thay đổi..." style="width:100%; padding:8px; margin-bottom:10px;">
+        <button onclick="searchChange()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <button onclick="downloadChangeCSV()" style="padding:8px 16px; margin-bottom:10px; float:right;">Tải xuống CSV</button>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Đối tượng</th>
+                    <th>Loại thay đổi</th>
+                    <th>Người thực hiện</th>
+                    <th>Trước thay đổi</th>
+                    <th>Sau thay đổi</th>
+                    <th>Thời gian</th>
+                </tr>
+            </thead>
+            <tbody id="changeTable">
+                <tr>
+                    <td>Kết quả thi SV001</td>
+                    <td>Cập nhật điểm</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>Nghe: 7.0</td>
+                    <td>Nghe: 7.5</td>
+                    <td>22/12/2025 10:20</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+`;
+    break;
+
+
+        case "phanhoi":
+    cards = `
+    <!-- Tạo phản hồi mới -->
+    <div class="card">
+        <h3>Tạo phản hồi khảo sát mới</h3>
+        <form id="newFeedbackForm" style="display:flex; flex-direction:column; gap:8px;">
+            <input type="text" id="fbName" placeholder="Họ tên" required>
+            <input type="text" id="fbRole" placeholder="Đối tượng (Thí sinh/CBTG)" required>
+            <input type="text" id="fbExam" placeholder="Kỳ thi" required>
+            <textarea id="fbContent" placeholder="Nhập phản hồi..." rows="4" style="padding:6px;"></textarea>
+            <button type="button" onclick="addFeedback()">Lưu phản hồi</button>
+        </form>
+    </div>
+
+    <!-- Danh sách phản hồi -->
+    <div class="card" style="grid-column:1/-1;">
+        <h3>Danh sách phản hồi</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Họ tên</th>
+                    <th>Đối tượng</th>
+                    <th>Kỳ thi</th>
+                    <th>Nội dung</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="feedbackTable"></tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết phản hồi -->
+    <div class="card" id="feedbackDetailCard">
+        <h3>Chi tiết phản hồi</h3>
+        <p>Chọn phản hồi để xem chi tiết</p>
+    </div>
+    `;
+    break;
+
+case "banchucnang":
+    cards = `
+    <!-- Tạo/Quản lý ban chức năng -->
+    <div class="card">
+        <h3>Quản lý Ban chức năng</h3>
+        <form id="newBanForm" style="display:flex; flex-direction:column; gap:8px;">
+            <input type="text" id="banName" placeholder="Tên ban chức năng" required>
+            <input type="text" id="banTask" placeholder="Nhiệm vụ" required>
+            <input type="text" id="banExam" placeholder="Kỳ thi áp dụng" required>
+            <button type="button" onclick="addBan()">Tạo Ban</button>
+        </form>
+    </div>
+
+    <!-- Danh sách Ban -->
+    <div class="card" style="grid-column:1/-1;">
+        <h3>Danh sách Ban chức năng</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>Tên Ban</th>
+                    <th>Nhiệm vụ</th>
+                    <th>Kỳ thi</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="banTable"></tbody>
+        </table>
+    </div>
+
+    <!-- Chi tiết nhân sự & phân công -->
+    <div class="card" id="banDetailCard">
+        <h3>Chi tiết Ban & Phân công cán bộ</h3>
+        <p>Chọn ban để xem chi tiết phân công và lịch nhiệm vụ</p>
+    </div>
+    `;
+    break;
+
+    }
+
+    headerTitle.innerText = titleText;
+    content.innerHTML = `<div class="card-grid">${cards}</div>`;
+}
+
+// Mock data (giả lập CSDL)
+const candidates = {
+    "31230001": {
+        name: "Nguyễn Văn A",
+        mssv: "31230001",
+        dotthi: "Đợt 1/2025",
+        status: "Đã duyệt",
+        papers: "CCCD, Bảng điểm"
+    },
+    "31230002": {
+        name: "Trần Thị B",
+        mssv: "31230002",
+        dotthi: "Đợt 1/2025",
+        status: "Chờ rà soát",
+        papers: "CCCD"
+    }
+};
+
+// FR05 – Xem chi tiết
+function viewDetail(mssv) {
+    const c = candidates[mssv];
+    document.getElementById("detailCard").innerHTML = `
+        <h3>Chi tiết hồ sơ</h3>
+        <p><b>Họ tên:</b> ${c.name}</p>
+        <p><b>MSSV:</b> ${c.mssv}</p>
+        <p><b>Đợt thi:</b> ${c.dotthi}</p>
+        <p><b>Trạng thái:</b> ${c.status}</p>
+        <p><b>Giấy tờ:</b> ${c.papers}</p>
+    `;
+}
+
+// FR03 – Sửa hồ sơ
+function editProfile(mssv) {
+    const c = candidates[mssv];
+    document.getElementById("editName").value = c.name;
+    document.getElementById("editMSSV").value = c.mssv;
+}
+
+// Lưu (giả lập)
+function saveProfile() {
+    alert("✔ Hồ sơ đã được cập nhật (mock)");
+}
+
+// FR06 – Tra cứu
+function searchCandidate() {
+    const keyword = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#candidateTable tr");
+
+    rows.forEach(row => {
+        row.style.display =
+            row.innerText.toLowerCase().includes(keyword)
+                ? ""
+                : "none";
+    });
+
+}
+
+// Mock data đề thi
+const exams = {
+    "THI001": {
+        name: "Đề thử 1",
+        dotthi: "Đợt 1/2025",
+        status: "Đã duyệt",
+        matrix: "Nghe, Đọc, Viết, Nói",
+        structure: "Chuẩn 6 bậc"
+    },
+    "THI002": {
+        name: "Đề thử 2",
+        dotthi: "Đợt 1/2025",
+        status: "Chờ duyệt",
+        matrix: "Nghe, Đọc, Viết, Nói",
+        structure: "Chuẩn 6 bậc"
+    }
+};
+
+// Xem chi tiết đề thi
+function viewExamDetail(examId) {
+    const e = exams[examId];
+    document.getElementById("examDetailCard").innerHTML = `
+        <h3>Chi tiết đề thi: ${examId}</h3>
+        <p><b>Tên đề:</b> ${e.name}</p>
+        <p><b>Đợt thi:</b> ${e.dotthi}</p>
+        <p><b>Trạng thái:</b> ${e.status}</p>
+        <p><b>Ma trận đề:</b> ${e.matrix}</p>
+        <p><b>Cấu trúc kỹ năng:</b> ${e.structure}</p>
+    `;
+}
+
+// Sửa đề thi (mock)
+function editExam(examId) {
+    const e = exams[examId];
+    const newName = prompt("Tên đề mới:", e.name);
+    if(newName) {
+        e.name = newName;
+        alert("✔ Đã cập nhật tên đề thi (mock)");
+        loadPage("dethithu", "📝 Quản lý đề thi thử");
+    }
+}
+
+// Xóa đề thi (mock)
+function deleteExam(examId) {
+    if(confirm(`Bạn có chắc muốn xóa đề ${examId}?`)) {
+        delete exams[examId];
+        alert("✔ Đã xóa đề thi (mock)");
+        loadPage("dethithu", "📝 Quản lý đề thi thử");
+    }
+}
+
+// Đăng tải đề thi mới (mock)
+function uploadExam() {
+    const fileInput = document.getElementById("fileInput").files[0];
+    const matrix = document.getElementById("matrixInput").value;
+    const structure = document.getElementById("structureInput").value;
+
+    if(!fileInput || !matrix || !structure) {
+        alert("Vui lòng điền đầy đủ thông tin!");
+        return;
+    }
+
+    const newId = "THI" + String(Object.keys(exams).length + 1).padStart(3,'0');
+    exams[newId] = {
+        name: fileInput.name,
+        dotthi: "Đợt 1/2025",
+        status: "Chờ duyệt",
+        matrix: matrix,
+        structure: structure
+    };
+    alert(`✔ Đã đăng tải đề thi mới: ${fileInput.name} (mock)`);
+    loadPage("dethithu", "📝 Quản lý đề thi thử");
+}
+
+// Mock data kế hoạch thi
+const plans = {
+    "plan1": {
+        name: "Đợt 1/2025",
+        date: "15/01/2025",
+        shift: "Ca 1",
+        candidates: 50,
+        status: "Chờ duyệt",
+        format: "Trên máy tính",
+        structure: "Chuẩn 6 bậc",
+        committee: "Hội đồng A"
+    },
+    "plan2": {
+        name: "Đợt 2/2025",
+        date: "20/02/2025",
+        shift: "Ca 2",
+        candidates: 80,
+        status: "Đã duyệt",
+        format: "Trên máy tính",
+        structure: "Chuẩn 6 bậc",
+        committee: "Hội đồng B"
+    }
+};
+
+// Xem chi tiết kế hoạch
+function viewPlanDetail(planId) {
+    const p = plans[planId];
+    document.getElementById("planDetailCard").innerHTML = `
+        <h3>Chi tiết kế hoạch: ${p.name}</h3>
+        <p><b>Ngày thi:</b> ${p.date}</p>
+        <p><b>Ca thi:</b> ${p.shift}</p>
+        <p><b>Số lượng thí sinh dự kiến:</b> ${p.candidates}</p>
+        <p><b>Trạng thái:</b> ${p.status}</p>
+        <p><b>Hình thức thi:</b> ${p.format}</p>
+        <p><b>Cấu trúc bài thi:</b> ${p.structure}</p>
+        <p><b>Hội đồng/Tổ chức thi:</b> ${p.committee}</p>
+    `;
+}
+
+// Sửa kế hoạch (mock)
+function editPlan(planId) {
+    const p = plans[planId];
+    const newName = prompt("Tên kế hoạch mới:", p.name);
+    if(newName) {
+        p.name = newName;
+        alert("✔ Đã cập nhật kế hoạch thi (mock)");
+        loadPage("kehoach", "📅 Quản lý kế hoạch thi");
+    }
+}
+
+// Duyệt kế hoạch (mock)
+function approvePlan(planId) {
+    const p = plans[planId];
+    if(confirm(`Bạn có muốn duyệt kế hoạch ${p.name}?`)) {
+        p.status = "Đã duyệt";
+        alert("✔ Kế hoạch đã được duyệt (mock)");
+        loadPage("kehoach", "📅 Quản lý kế hoạch thi");
+    }
+}
+
+// Tạo kế hoạch mới (mock)
+function createPlan() {
+    const name = document.getElementById("planName").value;
+    const date = document.getElementById("planDate").value;
+    const shift = document.getElementById("planShift").value;
+    const candidates = document.getElementById("planCandidates").value;
+    const location = document.getElementById("planLocation").value;
+    const format = document.getElementById("planFormat").value;
+    const structure = document.getElementById("planStructure").value;
+    const committee = document.getElementById("planCommittee").value;
+
+    if(!name || !date || !shift || !candidates) {
+        alert("Vui lòng điền đầy đủ thông tin bắt buộc!");
+        return;
+    }
+
+    const newId = "plan" + (Object.keys(plans).length + 1);
+    plans[newId] = {
+        name, date, shift, candidates, status: "Chờ duyệt",
+        format, structure, committee
+    };
+    alert(`✔ Đã tạo kế hoạch mới: ${name} (mock)`);
+    loadPage("kehoach", "📅 Quản lý kế hoạch thi");
+}
+
+// Tra cứu kế hoạch
+function searchPlan() {
+    const keyword = document.getElementById("searchPlanInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#planTable tr");
+
+    rows.forEach(row => {
+        row.style.display =
+            row.innerText.toLowerCase().includes(keyword)
+                ? ""
+                : "none";
+    });
+}
+
+// Mock data phòng thi
+const rooms = {
+    "P001": {
+        code: "P001",
+        location: "Phòng A101",
+        shift: "Ca 1",
+        subject: "Tiếng Anh",
+        capacity: 50,
+        candidates: 48,
+        supervisors: "Nguyễn Văn A",
+        format: "Máy",
+        status: "Đã phân",
+        students: ["31230001", "31230002", "31230003"]
+    },
+    "P002": {
+        code: "P002",
+        location: "Phòng B202",
+        shift: "Ca 2",
+        subject: "Tiếng Anh",
+        capacity: 60,
+        candidates: 55,
+        supervisors: "Trần Thị B",
+        format: "Máy",
+        status: "Chưa phân",
+        students: ["31230004","31230005"]
+    }
+};
+
+// Xem chi tiết phòng
+function viewRoomDetail(roomId) {
+    const r = rooms[roomId];
+    document.getElementById("roomDetailCard").innerHTML = `
+        <h3>Chi tiết phòng thi: ${r.code}</h3>
+        <p><b>Địa điểm:</b> ${r.location}</p>
+        <p><b>Ca thi:</b> ${r.shift}</p>
+        <p><b>Môn thi:</b> ${r.subject}</p>
+        <p><b>Sức chứa:</b> ${r.capacity}</p>
+        <p><b>Số thí sinh:</b> ${r.candidates}</p>
+        <p><b>Giám thị:</b> ${r.supervisors}</p>
+        <p><b>Hình thức thi:</b> ${r.format}</p>
+        <p><b>Trạng thái:</b> ${r.status}</p>
+        <p><b>Danh sách thí sinh:</b> ${r.students.join(", ")}</p>
+    `;
+}
+
+// Tạo số báo danh (mock)
+function generateSBD() {
+    const batch = document.getElementById("sbdBatch").value;
+    const rule = document.getElementById("sbdRule").value;
+    if(!batch || !rule) { alert("Điền đầy đủ thông tin!"); return; }
+    alert(`✔ Đã tạo số báo danh cho ${batch} theo quy tắc: ${rule} (mock)`);
+}
+
+// Phân phòng thi (mock)
+function assignRooms() { alert("✔ Phân phòng tự động (mock)"); }
+function manualAssign() { alert("✔ Phân phòng thủ công (mock)"); }
+
+// Xuất danh sách phòng (mock)
+function exportRoom(roomId) { alert(`✔ Xuất danh sách phòng ${roomId} (mock)`); }
+
+// Gửi email tự động (mock)
+function sendRoomEmail(roomId) { alert(`✔ Đã gửi email thông báo cho phòng ${roomId} (mock)`); }
+
+// Tra cứu phòng
+function searchRoom() {
+    const keyword = document.getElementById("searchRoomInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#roomTable tr");
+    rows.forEach(row => {
+        row.style.display =
+            row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// Mock data yêu cầu phúc khảo
+const requests = {
+    "31230001": {
+        code: "31230001",
+        name: "Nguyễn Văn A",
+        class: "KH1",
+        subject: "Tiếng Anh",
+        format: "Máy",
+        scoreBefore: 7.5,
+        content: "Kiểm tra lại phần nghe",
+        date: "20/12/2025",
+        status: "Đang xử lý",
+        officer: "Trần Thị B",
+        scoreAfter: null,
+        diff: null,
+        history: ["20/12: Tiếp nhận", "21/12: Đang chuyển bài"]
+    },
+    "31230002": {
+        code: "31230002",
+        name: "Trần Thị B",
+        class: "KH2",
+        subject: "Tiếng Anh",
+        format: "Máy",
+        scoreBefore: 8.0,
+        content: "Kiểm tra lại phần viết",
+        date: "21/12/2025",
+        status: "Đã có kết quả",
+        officer: "Nguyễn Văn C",
+        scoreAfter: 8.5,
+        diff: 0.5,
+        history: ["21/12: Tiếp nhận", "22/12: Chấm xong", "22/12: Đã phản hồi"]
+    }
+};
+
+// Xem chi tiết yêu cầu
+function viewRequestDetail(code) {
+    const r = requests[code];
+    document.getElementById("requestDetailCard").innerHTML = `
+        <h3>Chi tiết phúc khảo: ${r.code}</h3>
+        <p><b>Họ tên:</b> ${r.name}</p>
+        <p><b>Lớp:</b> ${r.class}</p>
+        <p><b>Môn thi:</b> ${r.subject}</p>
+        <p><b>Hình thức:</b> ${r.format}</p>
+        <p><b>Điểm trước:</b> ${r.scoreBefore}</p>
+        <p><b>Nội dung yêu cầu:</b> ${r.content}</p>
+        <p><b>Ngày gửi:</b> ${r.date}</p>
+        <p><b>Trạng thái:</b> ${r.status}</p>
+        <p><b>Người phụ trách:</b> ${r.officer}</p>
+        <p><b>Lịch sử xử lý:</b> ${r.history.join(" → ")}</p>
+        <p><b>Điểm sau:</b> ${r.scoreAfter ?? "-"}</p>
+        <p><b>Chênh lệch:</b> ${r.diff ?? "-"}</p>
+    `;
+}
+
+// Cập nhật yêu cầu (mock)
+function updateRequest(code) {
+    alert(`✔ Cập nhật yêu cầu phúc khảo ${code} (mock)`);
+}
+
+// Phản hồi yêu cầu (mock)
+function respondRequest(code) {
+    alert(`✔ Ghi nhận phản hồi cho yêu cầu ${code} (mock)`);
+}
+
+// Tìm kiếm yêu cầu
+function searchRequest() {
+    const keyword = document.getElementById("searchRequestInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#requestTable tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// Mock data kết quả thi
+const results = {
+    "31230001": {
+        code: "31230001",
+        name: "Nguyễn Văn A",
+        sbd: "001",
+        subject: "Tiếng Anh",
+        listening: 8.0,
+        reading: 7.5,
+        writing: 7.0,
+        speaking: 8.5,
+        total: 7.75,
+        status: "Đã phê duyệt",
+        note: ""
+    },
+    "31230002": {
+        code: "31230002",
+        name: "Trần Thị B",
+        sbd: "002",
+        subject: "Tiếng Anh",
+        listening: 7.5,
+        reading: 8.0,
+        writing: 7.0,
+        speaking: 7.5,
+        total: 7.5,
+        status: "Chưa phê duyệt",
+        note: ""
+    }
+};
+
+// Xem chi tiết kết quả
+function viewResultDetail(code) {
+    const r = results[code];
+    document.getElementById("resultDetailCard").innerHTML = `
+        <h3>Chi tiết kết quả thi: ${r.code}</h3>
+        <p><b>Họ tên:</b> ${r.name}</p>
+        <p><b>SBD:</b> ${r.sbd}</p>
+        <p><b>Môn thi:</b> ${r.subject}</p>
+        <p><b>Nghe:</b> ${r.listening}</p>
+        <p><b>Đọc:</b> ${r.reading}</p>
+        <p><b>Viết:</b> ${r.writing}</p>
+        <p><b>Nói:</b> ${r.speaking}</p>
+        <p><b>Tổng điểm:</b> ${r.total}</p>
+        <p><b>Trạng thái:</b> ${r.status}</p>
+        <p><b>Ghi chú:</b> ${r.note || "-"}</p>
+    `;
+}
+
+// Nhập/Cập nhật kết quả (mock)
+function updateResult(code) {
+    alert(`✔ Nhập/Cập nhật kết quả thi cho ${code} (mock)`);
+}
+
+// Phê duyệt kết quả (mock)
+function approveResult(code) {
+    alert(`✔ Kết quả thi ${code} đã được phê duyệt (mock)`);
+}
+
+// Tra cứu & lọc kết quả
+function searchResult() {
+    const keyword = document.getElementById("searchResultInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#resultTable tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// Xuất CSV (mock)
+function exportCSV() {
+    alert("✔ Xuất danh sách kết quả thi ra CSV (mock)");
+}
+
+// Mock dữ liệu vi phạm
+const violations = {
+    "31230001": {
+        type: "thí sinh",
+        code: "31230001",
+        name: "Nguyễn Văn A",
+        sbd: "001",
+        room: "101",
+        violation: "Copy bài",
+        time: "10:15 12/12/2025",
+        status: "Chưa xử lý",
+        note: ""
+    },
+    "staff102": {
+        type: "CBCT",
+        name: "Trần Thị B",
+        role: "Cán bộ coi thi",
+        room: "102",
+        violation: "Không giám sát đầy đủ",
+        time: "09:45 12/12/2025",
+        status: "Chưa xử lý",
+        note: ""
+    }
+};
+
+// Xem chi tiết vi phạm
+function viewViolationDetail(code) {
+    const v = violations[code];
+    document.getElementById("violationDetailCard").innerHTML = `
+        <h3>Chi tiết vi phạm: ${v.code || v.name}</h3>
+        <p><b>Đối tượng:</b> ${v.type}</p>
+        <p><b>Họ tên:</b> ${v.name}</p>
+        ${v.sbd ? `<p><b>SBD:</b> ${v.sbd}</p>` : ""}
+        <p><b>Phòng thi:</b> ${v.room}</p>
+        ${v.role ? `<p><b>Vai trò:</b> ${v.role}</p>` : ""}
+        <p><b>Hình thức vi phạm:</b> ${v.violation}</p>
+        <p><b>Thời điểm:</b> ${v.time}</p>
+        <p><b>Trạng thái:</b> ${v.status}</p>
+        <p><b>Ghi chú:</b> ${v.note || "-"}</p>
+    `;
+}
+
+// Cập nhật chi tiết vi phạm (mock)
+function updateViolation(code) {
+    alert(`✔ Cập nhật thông tin vi phạm cho ${code} (mock)`);
+}
+
+// Phê duyệt vi phạm (mock)
+function approveViolation(code) {
+    alert(`✔ Vi phạm ${code} đã được phê duyệt (mock)`);
+}
+
+// Tìm kiếm thí sinh vi phạm
+function searchStudentViolation() {
+    const keyword = document.getElementById("searchStudentViolation").value.toLowerCase();
+    const rows = document.querySelectorAll("#studentViolationTable tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// Mock dữ liệu chứng chỉ
+const certificates = {
+    "CERT001": {
+        code: "CERT001",
+        name: "Nguyễn Văn A",
+        sbd: "001",
+        exam: "Đợt 1/2025",
+        level: "Bậc 3",
+        issueDate: "15/12/2025",
+        status: "Đã phát hành",
+        note: "",
+        electronicFile: "CERT001.png"
+    }
+};
+
+// Xem chi tiết chứng chỉ
+function viewCertificateDetail(code) {
+    const c = certificates[code];
+    document.getElementById("certificateDetailCard").innerHTML = `
+        <h3>Chi tiết chứng chỉ: ${c.code}</h3>
+        <p><b>Họ tên:</b> ${c.name}</p>
+        <p><b>SBD:</b> ${c.sbd}</p>
+        <p><b>Kỳ thi:</b> ${c.exam}</p>
+        <p><b>Trình độ:</b> ${c.level}</p>
+        <p><b>Ngày cấp:</b> ${c.issueDate}</p>
+        <p><b>Trạng thái:</b> ${c.status}</p>
+        <p><b>Ghi chú:</b> ${c.note || "-"}</p>
+        ${c.electronicFile ? `<p><b>File điện tử:</b> <a href="${c.electronicFile}" target="_blank">Xem/Download</a></p>` : ""}
+    `;
+}
+
+// Phát hành chứng chỉ điện tử (mock)
+function issueCertificate(code) {
+    alert(`✔ Chứng chỉ ${code} đã được phát hành (mock)`);
+}
+
+// Tải xuống chứng chỉ PNG (mock)
+function downloadCertificate(code) {
+    alert(`✔ Tải xuống chứng chỉ ${code} dưới dạng PNG (mock)`);
+}
+
+// Tra cứu chứng chỉ
+function searchCertificate() {
+    const keyword = document.getElementById("searchCertificate").value.toLowerCase();
+    const rows = document.querySelectorAll("#certificateTable tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// Mock dữ liệu hội đồng thi
+const councils = {
+    "COUNCIL001": {
+        name: "Hội đồng ĐGNLNN 1",
+        exam: "Đợt 1/2025",
+        status: "Chưa phê duyệt",
+        duration: "15/12/2025 – 20/12/2025",
+        members: [
+            {name: "Nguyễn Văn A", unit: "P.ĐTTX", role: "Chủ tịch"},
+            {name: "Trần Thị B", unit: "P.KHĐT-KT", role: "Thư ký"}
+        ]
+    }
+};
+
+// Xem chi tiết hội đồng
+function viewCouncilDetail(code) {
+    const c = councils[code];
+    let membersHTML = c.members.map(m => `<li>${m.name} – ${m.unit} – ${m.role}</li>`).join("");
+    document.getElementById("councilDetailCard").innerHTML = `
+        <h3>Chi tiết hội đồng: ${c.name}</h3>
+        <p><b>Kỳ thi:</b> ${c.exam}</p>
+        <p><b>Trạng thái:</b> ${c.status}</p>
+        <p><b>Thời gian hoạt động:</b> ${c.duration}</p>
+        <p><b>Thành viên:</b></p>
+        <ul>${membersHTML}</ul>
+    `;
+}
+
+// Cập nhật hội đồng (mock)
+function updateCouncil(code) {
+    alert(`✔ Hội đồng ${code} đã được chỉnh sửa (mock)`);
+}
+
+// Phê duyệt hội đồng (mock)
+function approveCouncil(code) {
+    alert(`✔ Hội đồng ${code} đã được phê duyệt (mock)`);
+}
+
+// Tải danh sách CSV (mock)
+function downloadCouncil(code) {
+    alert(`✔ Xuất CSV hội đồng ${code} thành công (mock)`);
+}
+
+// Tra cứu hội đồng
+function searchCouncil() {
+    const keyword = document.getElementById("searchCouncil").value.toLowerCase();
+    const rows = document.querySelectorAll("#councilTable tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// Kiểm tra quyền truy cập
+function checkAccess(role) {
+    const allowedRoles = ["Quản trị viên", "P.ĐTTX"];
+    if (!allowedRoles.includes(role)) {
+        alert("❌ Bạn không có quyền truy cập lịch sử hệ thống!");
+        return false;
+    }
+    return true;
+}
+
+// Tra cứu lịch sử hoạt động
+function searchActivity() {
+    const keyword = document.getElementById("searchActivity").value.toLowerCase();
+    const rows = document.querySelectorAll("#activityTable tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// Tra cứu lịch sử thay đổi
+function searchChange() {
+    const keyword = document.getElementById("searchChange").value.toLowerCase();
+    const rows = document.querySelectorAll("#changeTable tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// Tải xuống CSV mock
+function downloadActivityCSV() {
+    alert("✔ Xuất lịch sử hoạt động CSV thành công (mock)");
+}
+function downloadChangeCSV() {
+    alert("✔ Xuất lịch sử thay đổi CSV thành công (mock)");
+}
+
+// Mock dữ liệu phản hồi
+const feedbacks = [
+    {id:1, name:"Nguyễn Văn A", role:"Thí sinh", exam:"Đợt 1/2025", content:"Hệ thống đăng ký tốt", status:"Hoàn thành"},
+    {id:2, name:"Trần Thị B", role:"CBTG", exam:"Đợt 1/2025", content:"Thiết bị thi chưa ổn", status:"Chưa hoàn thành"}
+];
+
+// Hiển thị danh sách phản hồi
+function renderFeedbackTable() {
+    const tbody = document.getElementById("feedbackTable");
+    tbody.innerHTML = "";
+    feedbacks.forEach(fb => {
+        tbody.innerHTML += `
+        <tr>
+            <td>${fb.name}</td>
+            <td>${fb.role}</td>
+            <td>${fb.exam}</td>
+            <td>${fb.content.length>30? fb.content.substring(0,30)+"...":fb.content}</td>
+            <td>${fb.status}</td>
+            <td>
+                <button onclick="viewFeedback(${fb.id})">Xem</button>
+                ${fb.status=="Chưa hoàn thành"? `<button onclick="editFeedback(${fb.id})">Sửa</button>` : ""}
+            </td>
+        </tr>`;
+    });
+}
+
+// Xem chi tiết phản hồi
+function viewFeedback(id) {
+    const fb = feedbacks.find(f=>f.id===id);
+    document.getElementById("feedbackDetailCard").innerHTML = `
+        <h3>Chi tiết phản hồi</h3>
+        <p><b>Họ tên:</b> ${fb.name}</p>
+        <p><b>Đối tượng:</b> ${fb.role}</p>
+        <p><b>Kỳ thi:</b> ${fb.exam}</p>
+        <p><b>Nội dung:</b> ${fb.content}</p>
+        <p><b>Trạng thái:</b> ${fb.status}</p>
+    `;
+}
+
+// Sửa phản hồi
+function editFeedback(id) {
+    const fb = feedbacks.find(f=>f.id===id);
+    document.getElementById("fbName").value = fb.name;
+    document.getElementById("fbRole").value = fb.role;
+    document.getElementById("fbExam").value = fb.exam;
+    document.getElementById("fbContent").value = fb.content;
+    // Khi lưu, ghi đè phản hồi
+    document.getElementById("newFeedbackForm").onsubmit = (e)=>{
+        e.preventDefault();
+        fb.name = document.getElementById("fbName").value;
+        fb.role = document.getElementById("fbRole").value;
+        fb.exam = document.getElementById("fbExam").value;
+        fb.content = document.getElementById("fbContent").value;
+        fb.status = "Hoàn thành";
+        renderFeedbackTable();
+        viewFeedback(fb.id);
+        alert("✔ Phản hồi đã được cập nhật");
+    };
+}
+
+// Thêm phản hồi mới
+function addFeedback() {
+    const name = document.getElementById("fbName").value.trim();
+    const role = document.getElementById("fbRole").value.trim();
+    const exam = document.getElementById("fbExam").value.trim();
+    const content = document.getElementById("fbContent").value.trim();
+    if(!name || !role || !exam || !content) { alert("Điền đầy đủ thông tin!"); return; }
+    const newFb = {
+        id: feedbacks.length + 1,
+        name,
+        role,
+        exam,
+        content,
+        status:"Chưa hoàn thành"
+    };
+    feedbacks.push(newFb);
+    renderFeedbackTable();
+    document.getElementById("newFeedbackForm").reset();
+    alert("✔ Phản hồi mới đã được lưu (mock)");
+}
+
+// Xuất CSV
+function exportFeedbackCSV() {
+    let csv = "Họ tên,Đối tượng,Kỳ thi,Nội dung,Trạng thái\n";
+    feedbacks.forEach(fb => {
+        csv += `"${fb.name}","${fb.role}","${fb.exam}","${fb.content}","${fb.status}"\n`;
+    });
+    const blob = new Blob([csv], {type:"text/csv"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "feedbacks.csv";
+    link.click();
+}
+
+// Khi load tab
+if(currentPage==="phanhoi") renderFeedbackTable();
+
+// Mock dữ liệu Ban chức năng
+const bans = [
+    {id:1, name:"Ban coi thi", task:"Quản lý phòng thi", exam:"Đợt 1/2025", status:"Chưa phê duyệt", staff:[]},
+    {id:2, name:"Ban chấm thi", task:"Chấm bài", exam:"Đợt 1/2025", status:"Chưa phê duyệt", staff:[]}
+];
+
+// Hiển thị danh sách Ban
+function renderBanTable() {
+    const tbody = document.getElementById("banTable");
+    tbody.innerHTML = "";
+    bans.forEach(b => {
+        tbody.innerHTML += `
+        <tr>
+            <td>${b.name}</td>
+            <td>${b.task}</td>
+            <td>${b.exam}</td>
+            <td>${b.status}</td>
+            <td>
+                <button onclick="viewBan(${b.id})">Xem</button>
+                <button onclick="approveBan(${b.id})">Phê duyệt</button>
+            </td>
+        </tr>`;
+    });
+}
+
+// Xem chi tiết Ban & phân công
+function viewBan(id) {
+    const b = bans.find(x=>x.id===id);
+    let staffList = b.staff.map(s=>`<li>${s.name} - ${s.role} - ${s.task}</li>`).join("");
+    document.getElementById("banDetailCard").innerHTML = `
+        <h3>${b.name} - Kỳ thi ${b.exam}</h3>
+        <p><b>Nhiệm vụ:</b> ${b.task}</p>
+        <p><b>Trạng thái:</b> ${b.status}</p>
+        <h4>Danh sách cán bộ phân công:</h4>
+        <ul>${staffList || "<i>Chưa có cán bộ phân công</i>"}</ul>
+    `;
+}
+
+// Tạo Ban mới
+function addBan() {
+    const name = document.getElementById("banName").value.trim();
+    const task = document.getElementById("banTask").value.trim();
+    const exam = document.getElementById("banExam").value.trim();
+    if(!name || !task || !exam){ alert("Điền đầy đủ thông tin!"); return; }
+    const newBan = {id:bans.length+1, name, task, exam, status:"Chưa phê duyệt", staff:[]};
+    bans.push(newBan);
+    renderBanTable();
+    document.getElementById("newBanForm").reset();
+    alert("✔ Ban chức năng mới đã được tạo (mock)");
+}
+
+// Phê duyệt Ban
+function approveBan(id){
+    const b = bans.find(x=>x.id===id);
+    b.status="Đã phê duyệt";
+    renderBanTable();
+    alert(`✔ Ban ${b.name} đã được phê duyệt`);
+}
+
+// Phân công cán bộ vào Ban
+function assignStaff(banId, name, role, task){
+    const b = bans.find(x=>x.id===banId);
+    b.staff.push({name, role, task});
+    viewBan(banId);
+}
+
+// Khi load tab
+if(currentPage==="banchucnang") renderBanTable();
+
+loadPage("hoso", "Quản lý hồ sơ thí sinh");
+
+
+</script>
+
+</body>
+</html>
