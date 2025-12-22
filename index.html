@@ -5,6 +5,8 @@
 <title>UEH Exam Management System</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Rokkitt:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 * {
@@ -167,6 +169,72 @@ input[type="text"], input[type="file"] {
     overflow-x: hidden;
 }
 
+.notify {
+    position: relative;
+    cursor: pointer;
+    font-size: 18px;
+    color: #006571;
+}
+
+.notify:hover {
+    color: #00838f;
+}
+
+.notify .badge {
+    position: absolute;
+    top: -5px;
+    right: -6px;
+    background: #f44336;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* Xếp các nút theo hàng ngang, có khoảng cách */
+.auto-notify-buttons {
+    display: flex;        /* xếp ngang */
+    gap: 8px;             /* khoảng cách giữa các nút */
+    flex-wrap: wrap;       /* xuống dòng nếu quá nhiều nút */
+    margin-top: 10px;     /* cách phần trên */
+}
+
+.auto-notify-buttons button {
+    padding: 6px 12px;     /* thu gọn padding */
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #006571;
+    background-color: #006571;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.auto-notify-buttons button:hover {
+    background-color: #006571;
+}
+
+
+.action-cell {
+    display: flex;       /* xếp ngang */
+    gap: 4px;            /* khoảng cách giữa các nút */
+    justify-content: center; /* căn giữa trong ô */
+}
+
+.action-cell button {
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    border: 1px solid #006571;
+    background-color: #006571;
+    color: white;
+    cursor: pointer;
+}
+.action-cell button:hover {
+    background-color: #006571;
+}
+
+
 </style>
 </head>
 
@@ -191,6 +259,8 @@ input[type="text"], input[type="file"] {
         <li data-page="lichsu">🕒 Quản lý lịch sử hệ thống</li>
         <li data-page="phanhoi">💬 Quản lý phản hồi</li>
 	<li data-page="banchucnang">🏢 Quản lý các ban chức năng</li>
+	<li data-page="thongbao" style="display:none;">🔔 Quản lý thông báo</li>
+
     </ul>
 </div>
 
@@ -201,21 +271,29 @@ input[type="text"], input[type="file"] {
     <div class="header">
         <h2 id="header-title">🧑‍🎓 Quản lý hồ sơ thí sinh</h2>
         <div class="user">
-    	     <img src="AVATAR.PNG" alt="User Avatar">
-             <span>Nguyễn Văn A</span>
-	     
-	     <button id="logoutBtn" style="
-            display:block;
-            margin-top:5px;
-            padding:4px 10px;
-            font-size:14px;
-            background:#f44336;
-            color:#fff;
-            border:none;
-            border-radius:4px;
-            cursor:pointer;
-        ">Đăng xuất</button>
-	</div>
+
+    <!-- ICON THÔNG BÁO -->
+    <div class="notify">
+        <i class="fa-solid fa-bell"></i>
+        <span class="badge">3</span>
+    </div>
+
+    <!-- AVATAR -->
+    <img src="AVATAR.PNG" alt="User Avatar">
+    <span>Nguyễn Văn A</span>
+
+    <button id="logoutBtn" style="
+        margin-left:10px;
+        padding:4px 10px;
+        font-size:14px;
+        background:#f44336;
+        color:#fff;
+        border:none;
+        border-radius:4px;
+        cursor:pointer;
+    ">Đăng xuất</button>
+</div>
+
 
     </div>
 
@@ -231,13 +309,6 @@ const content = document.getElementById("content");
 const headerTitle = document.getElementById("header-title");
 const menuItems = document.querySelectorAll(".sidebar li");
 
-document.getElementById("logoutBtn").addEventListener("click", function(){
-    // Nếu có session/user token, xóa tại đây
-    // localStorage.removeItem("token");
-    window.location.href = "landing_page.html"; // Chuyển về trang Landing_page
-});
-
-
 menuItems.forEach(item => {
         item.addEventListener("click", () => {
             menuItems.forEach(i => i.classList.remove("active"));
@@ -246,6 +317,13 @@ menuItems.forEach(item => {
         });
     });
 
+document.getElementById("logoutBtn").addEventListener("click", function(){
+    // Nếu có session/user token, xóa tại đây
+    // localStorage.removeItem("token");
+    window.location.href = "landing_page.html"; // Chuyển về trang Landing_page
+});
+
+
 function loadPage(page, titleText) {
     let cards = "";
 
@@ -253,15 +331,15 @@ function loadPage(page, titleText) {
         case "hoso":
                 cards = `
                 <!-- Tra cứu -->
-                <div class="card">
-                    <h3>Tra cứu thí sinh</h3>
-                    <input id="searchInput" type="text" 
-                           placeholder="Nhập mã số, họ tên, đợt thi..." 
-                           style="width:100%; padding:8px; margin-bottom:10px;">
-                    <button onclick="searchCandidate()" style="padding:8px 16px;">
-                        Tìm kiếm
-                    </button>
-                </div>
+                <div class="card" style="grid-column: 1 / -1;">
+    		    <h3>Tra cứu thí sinh</h3>
+    		    <div class="search-bar">
+                        <input id="searchInput" type="text"
+                             placeholder="Nhập mã số, họ tên, đợt thi..." style="width: 90%">
+                        <button onclick="searchCandidate()">Tìm kiếm</button>
+                    </div>
+		</div>
+
 
                 <!-- Danh sách thí sinh -->
                 <div class="card" style="grid-column: 1 / -1;">
@@ -290,7 +368,7 @@ function loadPage(page, titleText) {
                             <tr>
                                 <td>31230002</td>
                                 <td>Trần Thị B</td>
-                                <td>Đợt 1/2025</td>
+                                <td>Đợt 6/2025</td>
                                 <td>Chờ rà soát</td>
                                 <td>
                                     <button onclick="viewDetail('31230002')">Xem</button>
@@ -324,374 +402,418 @@ function loadPage(page, titleText) {
 
         case "dethithu":
     cards = `
-    <!-- Tạo đề thi -->
-    <div class="card">
-        <h3>Đăng tải đề thi</h3>
-        <form id="uploadForm" style="display:flex; flex-direction:column; gap:10px;">
-            <input type="file" id="fileInput" accept=".pdf,.docx">
-            <input type="text" id="matrixInput" placeholder="Ma trận đề (ví dụ: Nghe, Đọc, Viết, Nói)">
-            <input type="text" id="structureInput" placeholder="Cấu trúc kỹ năng">
-            <button type="button" onclick="uploadExam()">Đăng tải đề thi</button>
-        </form>
+    <!-- FR12 – Tra cứu -->
+    <div class="card" style="grid-column:1/-1;">
+        <h3>Tra cứu đề thi</h3>
+        <input id="searchExam" type="text"
+               placeholder="Nhập mã đề, kỳ thi, kỹ năng, trạng thái..."
+               style="width:90%">
+        <button onclick="searchExam()">Tìm kiếm</button>
     </div>
 
-    <!-- Danh sách đề thi -->
-    <div class="card" style="grid-column: 1 / -1;">
+    <!-- FR10 – Danh sách đề -->
+    <div class="card" style="grid-column:1/-1;">
         <h3>Danh sách đề thi thử</h3>
         <table style="width:100%; border-collapse:collapse; margin-top:10px;">
             <thead>
                 <tr style="background:#f0f0f0;">
                     <th>Mã đề</th>
-                    <th>Tên đề</th>
                     <th>Kỳ thi</th>
+                    <th>Cấu trúc</th>
+                    <th>Trình độ</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
             </thead>
             <tbody id="examTable">
-                <tr>
-                    <td>THI001</td>
-                    <td>Đề thử 1</td>
-                    <td>Đợt 1/2025</td>
-                    <td>Đã duyệt</td>
-                    <td>
-                        <button onclick="viewExamDetail('THI001')">Xem</button>
-                        <button onclick="editExam('THI001')">Sửa</button>
-                        <button onclick="deleteExam('THI001')">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>THI002</td>
-                    <td>Đề thử 2</td>
-                    <td>Đợt 1/2025</td>
-                    <td>Chờ duyệt</td>
-                    <td>
-                        <button onclick="viewExamDetail('THI002')">Xem</button>
-                        <button onclick="editExam('THI002')">Sửa</button>
-                        <button onclick="deleteExam('THI002')">Xóa</button>
-                    </td>
-                </tr>
+                ${Object.values(examTests).map(e => `
+                    <tr>
+                        <td>${e.code}</td>
+                        <td>${e.kyThi}</td>
+                        <td>${e.structure}</td>
+                        <td>${e.level}</td>
+                        <td>${e.status}</td>
+                        <td>
+                            <button onclick="viewExamDetail('${e.code}')">Xem</button>
+                            <button onclick="editExam('${e.code}')">Sửa</button>
+                            ${e.status === "Đã duyệt"
+                                ? `<button onclick="downloadPDF('${e.code}')">PDF</button>`
+                                : ``}
+                        </td>
+                    </tr>
+                `).join("")}
             </tbody>
         </table>
     </div>
 
-    <!-- Chi tiết đề thi -->
+    <!-- FR11 – Chi tiết đề -->
     <div class="card" id="examDetailCard">
         <h3>Chi tiết đề thi</h3>
-        <p>Chọn một đề thi để xem chi tiết</p>
+        <p>Chọn đề thi để xem chi tiết</p>
     </div>
+<!-- FR08 – Tạo mã đề từ bộ đề gốc -->
+<div class="card">
+    <h3>Tạo mã đề từ bộ đề gốc</h3>
+
+    <select id="originSet" style="padding:6px;">
+        <option value="">-- Chọn bộ đề gốc --</option>
+        ${Object.values(originalExamSets).map(b => `
+            <option value="${b.id}">
+                ${b.name} (${b.level})
+            </option>
+        `).join("")}
+    </select>
+
+    <input id="numOfCodes" type="number"
+           placeholder="Số lượng mã đề cần tạo" min="1">
+
+    <button type="button" onclick="generateFromOriginal()">
+        Tạo mã đề
+    </button>
+
+    <hr style="margin:10px 0;">
+
+    <h4>Danh sách mã đề đã tạo</h4>
+    <ul id="generatedList" style="padding-left:18px;"></ul>
+</div>
+
+
+    <!-- FR07 + FR08 + FR09 -->
+    <div class="card">
+    <h3>Đăng tải / Cập nhật đề thi</h3>
+    <form style="display:flex; flex-direction:column; gap:8px;">
+        <input id="examCode" type="text" placeholder="Mã đề">
+        <input id="examKyThi" type="text" placeholder="Kỳ thi">
+        <input id="examStructure" type="text" placeholder="Cấu trúc đề">
+        <input id="examLevel" type="text" placeholder="Trình độ (B1/B2/C1)">
+
+        <!-- FILE ĐỀ -->
+        <label><b>File đề thi (PDF/DOCX)</b></label>
+        <input id="examFile" type="file" accept=".pdf,.doc,.docx">
+
+        <!-- FILE ĐÁP ÁN -->
+        <label><b>File đáp án</b></label>
+        <input id="answerFile" type="file" accept=".pdf,.doc,.docx,.xlsx">
+
+        <button type="button" onclick="saveExam()">Lưu đề</button>
+    </form>
+</div>
     `;
     break;
 
-        case "kehoach":
+
+	case "kehoach":
     cards = `
-    <!-- Tạo kế hoạch thi -->
-    <div class="card">
-        <h3>Tạo kế hoạch thi</h3>
-        <form id="planForm" style="display:flex; flex-direction:column; gap:10px;">
-            <input type="text" id="planName" placeholder="Tên kế hoạch/Đợt thi">
-            <input type="text" id="planDate" placeholder="Ngày thi (dd/mm/yyyy)">
-            <input type="text" id="planShift" placeholder="Ca thi">
-            <input type="number" id="planCandidates" placeholder="Số lượng thí sinh dự kiến">
-            <input type="text" id="planLocation" placeholder="Địa điểm">
-            <input type="text" id="planFormat" placeholder="Hình thức thi (Trên máy tính)">
-            <input type="text" id="planStructure" placeholder="Cấu trúc bài thi (Chuẩn 6 bậc)">
-            <input type="text" id="planCommittee" placeholder="Danh sách hội đồng/Tổ chức thi">
-            <button type="button" onclick="createPlan()">Tạo kế hoạch</button>
-        </form>
+    <!-- FR19 – Tra cứu kế hoạch -->
+    <div class="card" style="grid-column:1/-1;">
+        <h3>Tra cứu kế hoạch thi</h3>
+        <input id="searchPlan" type="text"
+               placeholder="Nhập ngày thi, đợt thi, trạng thái..."
+               style="width:90%">
+        <button onclick="searchPlan()">Tìm kiếm</button>
     </div>
 
-    <!-- Danh sách kế hoạch thi -->
-    <div class="card" style="grid-column: 1 / -1;">
+    <!-- FR18 – Danh sách kế hoạch -->
+    <div class="card" style="grid-column:1/-1;">
         <h3>Danh sách kế hoạch thi</h3>
-        <input type="text" id="searchPlanInput" placeholder="Tra cứu theo tên, ngày, trạng thái..." style="width:100%; padding:8px; margin-bottom:10px;">
-        <button onclick="searchPlan()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
         <table style="width:100%; border-collapse:collapse; margin-top:10px;">
             <thead>
                 <tr style="background:#f0f0f0;">
-                    <th>Tên kế hoạch</th>
+                    <th>Mã kế hoạch</th>
                     <th>Ngày thi</th>
-                    <th>Ca thi</th>
-                    <th>Số thí sinh</th>
+                    <th>Đợt thi</th>
+                    <th>Địa điểm</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
             </thead>
             <tbody id="planTable">
-                <tr>
-                    <td>Đợt 1/2025</td>
-                    <td>15/01/2025</td>
-                    <td>Ca 1</td>
-                    <td>50</td>
-                    <td>Chờ duyệt</td>
-                    <td>
-                        <button onclick="viewPlanDetail('plan1')">Xem</button>
-                        <button onclick="editPlan('plan1')">Sửa</button>
-                        <button onclick="approvePlan('plan1')">Duyệt</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Đợt 2/2025</td>
-                    <td>20/02/2025</td>
-                    <td>Ca 2</td>
-                    <td>80</td>
-                    <td>Đã duyệt</td>
-                    <td>
-                        <button onclick="viewPlanDetail('plan2')">Xem</button>
-                        <button onclick="editPlan('plan2')">Sửa</button>
-                        <button onclick="approvePlan('plan2')">Duyệt</button>
-                    </td>
-                </tr>
+                ${Object.values(examPlans).map(p => `
+                    <tr>
+                        <td>${p.code}</td>
+                        <td>${p.date}</td>
+                        <td>${p.round}</td>
+                        <td>${p.location}</td>
+                        <td>${p.status}</td>
+                        <td>
+                            <button onclick="viewPlanDetail('${p.code}')">Xem</button>
+                            ${p.status !== "Đã duyệt"
+                                ? `<button onclick="editPlan('${p.code}')">Sửa</button>`
+                                : ``}
+                            ${p.status === "Chờ duyệt"
+                                ? `<button onclick="approvePlan('${p.code}')">Duyệt</button>`
+                                : ``}
+                        </td>
+                    </tr>
+                `).join("")}
             </tbody>
         </table>
     </div>
 
-    <!-- Chi tiết kế hoạch -->
+    <!-- FR15 – Chi tiết kế hoạch -->
     <div class="card" id="planDetailCard">
         <h3>Chi tiết kế hoạch thi</h3>
-        <p>Chọn kế hoạch để xem chi tiết</p>
+        <p>Chọn một kế hoạch để xem chi tiết</p>
+    </div>
+
+    <!-- FR14 + FR16 – Tạo / cập nhật kế hoạch -->
+    <div class="card">
+        <h3>Tạo / Cập nhật kế hoạch thi</h3>
+        <form style="display:flex; flex-direction:column; gap:8px;">
+            <input id="planCode" type="text" placeholder="Mã kế hoạch">
+            <input id="planDate" type="date">
+            <input id="planRound" type="text" placeholder="Đợt thi">
+            <input id="planLocation" type="text" placeholder="Địa điểm">
+            <input id="planQuantity" type="number" placeholder="Số lượng thí sinh dự kiến">
+            <input id="planStructure" type="text" placeholder="Cấu trúc bài thi (Bậc 3–5)">
+            <input id="planCouncil" type="text" placeholder="Hội đồng tổ chức">
+            <button type="button" onclick="savePlan()">Lưu kế hoạch</button>
+        </form>
     </div>
     `;
     break;
 
+
         case "phongthi":
+cards = `
+<!-- FR25 – Tìm kiếm phòng thi -->
+<div class="card" style="grid-column:1/-1;">
+    <h3>Tra cứu / Tìm kiếm phòng thi</h3>
+    <input id="searchRoom" type="text"
+           placeholder="Mã phòng, môn thi, ca thi, địa điểm..."
+           style="width:90%">
+    <button onclick="searchRoom()">Tìm kiếm</button>
+</div>
+
+<!-- FR24 – Danh sách phòng thi -->
+<div class="card" style="grid-column:1/-1;">
+    <h3>Danh sách phòng thi</h3>
+    <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+        <thead>
+            <tr style="background:#f0f0f0;">
+                <th>Mã phòng</th>
+                <th>Địa điểm</th>
+                <th>Ca thi</th>
+                <th>Môn thi</th>
+                <th>Sức chứa</th>
+                <th>Đã phân</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="roomTable">
+            ${Object.values(examRooms).map(r => `
+                <tr>
+                    <td>${r.code}</td>
+                    <td>${r.location}</td>
+                    <td>${r.shift}</td>
+                    <td>${r.subject}</td>
+                    <td>${r.capacity}</td>
+                    <td>${r.assigned}</td>
+                    <td>
+                        <button onclick="viewRoom('${r.code}')">Xem</button>
+                        <button onclick="assignRoom('${r.code}')">Chia phòng</button>
+                    </td>
+                </tr>
+            `).join("")}
+        </tbody>
+    </table>
+</div>
+
+<!-- FR22 – Chi tiết phòng thi -->
+<div class="card" id="roomDetailCard">
+    <h3>Chi tiết phòng thi</h3>
+    <p>Chọn phòng thi để xem chi tiết</p>
+</div>
+
+<!-- FR21 – Chia phòng thi -->
+<div class="card">
+    <h3>Chia phòng thi</h3>
+    <form style="display:flex; flex-direction:column; gap:8px;">
+        <input id="assignRoomCode" type="text" placeholder="Mã phòng">
+        <input id="assignRule" type="text" placeholder="Quy tắc (SBD / Lớp / Ngẫu nhiên)">
+        <input id="assignLimit" type="number" placeholder="Số lượng tối đa">
+        <button type="button" onclick="confirmAssign()">Xác nhận chia phòng</button>
+    </form>
+</div>
+
+<!-- FR20 – Tạo số báo danh -->
+<div class="card">
+    <h3>Tạo số báo danh</h3>
+    <form style="display:flex; flex-direction:column; gap:8px;">
+        <input id="sbdPrefix" type="text" placeholder="Tiền tố (VD: UEH25)">
+        <input id="sbdStart" type="number" placeholder="Số bắt đầu">
+        <input id="sbdEnd" type="number" placeholder="Số kết thúc">
+        <button type="button" onclick="generateSBD()">Tạo SBD</button>
+    </form>
+</div>
+
+<!-- FR23 – Xuất danh sách -->
+<div class="card">
+    <h3>Xuất danh sách phòng thi</h3>
+    <button onclick="exportRoom('excel')">Xuất Excel</button>
+    <button onclick="exportRoom('pdf')">Xuất PDF</button>
+</div>
+
+<!-- FR26 – Gửi email -->
+<div class="card">
+    <h3>Gửi email thông báo</h3>
+    <button onclick="sendEmail('all')">Gửi theo đợt</button>
+    <button onclick="sendEmail('room')">Gửi theo phòng</button>
+</div>
+`;
+break;
+
+
+        case "phuckhao":
+    headerTitle.innerText = "📄 Quản lý đơn phúc khảo";
+
     cards = `
-    <!-- Tạo số báo danh -->
+    <!-- FR32 – Tìm kiếm / lọc -->
+    <div class="card" style="grid-column:1/-1;">
+        <h3>Tìm kiếm yêu cầu phúc khảo</h3>
+        <input id="searchRecheck" type="text"
+               placeholder="MSSV, họ tên, môn thi, trạng thái..."
+               style="width:85%">
+        <button onclick="searchRecheck()">Tìm kiếm</button>
+    </div>
+
+    <!-- FR27 – Danh sách yêu cầu -->
+    <div class="card" style="grid-column:1/-1;">
+        <h3>Danh sách yêu cầu phúc khảo</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>MSSV</th>
+                    <th>Họ tên</th>
+                    <th>Môn thi</th>
+                    <th>Điểm trước</th>
+                    <th>Ngày gửi</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="recheckTable"></tbody>
+        </table>
+    </div>
+
+    <!-- FR29 – Chi tiết yêu cầu -->
+    <div class="card" id="recheckDetailCard">
+        <h3>Chi tiết yêu cầu phúc khảo</h3>
+        <p>Chọn một yêu cầu để xem chi tiết</p>
+    </div>
+
+    <!-- FR30 – Phản hồi -->
     <div class="card">
-        <h3>Tạo số báo danh</h3>
-        <form id="sbdForm" style="display:flex; flex-direction:column; gap:10px;">
-            <input type="text" id="sbdBatch" placeholder="Đợt thi">
-            <input type="text" id="sbdRule" placeholder="Quy tắc đánh số (prefix, khoa, phòng)">
-            <button type="button" onclick="generateSBD()">Tạo số báo danh</button>
+        <h3>Phản hồi / Xử lý phúc khảo</h3>
+        <form style="display:flex; flex-direction:column; gap:8px;">
+            <input id="afterScore" type="number" step="0.25"
+                   placeholder="Điểm sau phúc khảo">
+            <select id="recheckResult">
+                <option value="">-- Kết quả --</option>
+                <option value="Chấp nhận">Chấp nhận</option>
+                <option value="Từ chối">Từ chối</option>
+            </select>
+            <textarea id="recheckNote" rows="3"
+                      placeholder="Lý do / ghi chú xử lý"></textarea>
+            <button type="button" onclick="submitRecheck()">Gửi phản hồi</button>
         </form>
     </div>
 
-    <!-- Chia phòng thi -->
+    <!-- FR31 – Theo dõi tiến độ -->
     <div class="card">
-        <h3>Chia phòng thi</h3>
-        <button type="button" onclick="assignRooms()">Phân phòng tự động</button>
-        <button type="button" onclick="manualAssign()">Phân phòng thủ công</button>
-    </div>
-
-    <!-- Danh sách phòng thi -->
-    <div class="card" style="grid-column: 1 / -1;">
-        <h3>Danh sách phòng thi</h3>
-        <input type="text" id="searchRoomInput" placeholder="Tra cứu phòng theo mã, địa điểm, ca, môn..." style="width:100%; padding:8px; margin-bottom:10px;">
-        <button onclick="searchRoom()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
-        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-            <thead>
-                <tr style="background:#f0f0f0;">
-                    <th>Mã phòng</th>
-                    <th>Địa điểm</th>
-                    <th>Ca thi</th>
-                    <th>Môn thi</th>
-                    <th>Sức chứa</th>
-                    <th>Số thí sinh</th>
-                    <th>Giám thị</th>
-                    <th>Hình thức thi</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="roomTable">
-                <tr>
-                    <td>P001</td>
-                    <td>Phòng A101</td>
-                    <td>Ca 1</td>
-                    <td>Tiếng Anh</td>
-                    <td>50</td>
-                    <td>48</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>Máy</td>
-                    <td>Đã phân</td>
-                    <td>
-                        <button onclick="viewRoomDetail('P001')">Xem</button>
-                        <button onclick="exportRoom('P001')">Xuất</button>
-                        <button onclick="sendRoomEmail('P001')">Gửi Email</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>P002</td>
-                    <td>Phòng B202</td>
-                    <td>Ca 2</td>
-                    <td>Tiếng Anh</td>
-                    <td>60</td>
-                    <td>55</td>
-                    <td>Trần Thị B</td>
-                    <td>Máy</td>
-                    <td>Chưa phân</td>
-                    <td>
-                        <button onclick="viewRoomDetail('P002')">Xem</button>
-                        <button onclick="exportRoom('P002')">Xuất</button>
-                        <button onclick="sendRoomEmail('P002')">Gửi Email</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Chi tiết phòng thi -->
-    <div class="card" id="roomDetailCard">
-        <h3>Chi tiết phòng thi</h3>
-        <p>Chọn phòng để xem chi tiết</p>
+        <h3>Tiến độ xử lý phúc khảo</h3>
+        <ul id="recheckTimeline" style="padding-left:18px;"></ul>
     </div>
     `;
-    break;
-
-        case "phuckhao":
-    cards = `
-    <!-- Danh sách yêu cầu phúc khảo -->
-    <div class="card" style="grid-column: 1 / -1;">
-        <h3>Danh sách yêu cầu phúc khảo</h3>
-        <input type="text" id="searchRequestInput" placeholder="Tìm kiếm theo mã SV, họ tên, lớp, môn..." style="width:100%; padding:8px; margin-bottom:10px;">
-        <button onclick="searchRequest()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
-        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-            <thead>
-                <tr style="background:#f0f0f0;">
-                    <th>Mã SV</th>
-                    <th>Họ tên</th>
-                    <th>Lớp</th>
-                    <th>Môn thi</th>
-                    <th>Hình thức</th>
-                    <th>Điểm trước</th>
-                    <th>Nội dung yêu cầu</th>
-                    <th>Ngày gửi</th>
-                    <th>Trạng thái</th>
-                    <th>Người phụ trách</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="requestTable">
-                <tr>
-                    <td>31230001</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>KH1</td>
-                    <td>Tiếng Anh</td>
-                    <td>Máy</td>
-                    <td>7.5</td>
-                    <td>Kiểm tra lại phần nghe</td>
-                    <td>20/12/2025</td>
-                    <td>Đang xử lý</td>
-                    <td>Trần Thị B</td>
-                    <td>
-                        <button onclick="viewRequestDetail('31230001')">Xem</button>
-                        <button onclick="updateRequest('31230001')">Cập nhật</button>
-                        <button onclick="respondRequest('31230001')">Phản hồi</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>31230002</td>
-                    <td>Trần Thị B</td>
-                    <td>KH2</td>
-                    <td>Tiếng Anh</td>
-                    <td>Máy</td>
-                    <td>8.0</td>
-                    <td>Kiểm tra lại phần viết</td>
-                    <td>21/12/2025</td>
-                    <td>Đã có kết quả</td>
-                    <td>Nguyễn Văn C</td>
-                    <td>
-                        <button onclick="viewRequestDetail('31230002')">Xem</button>
-                        <button onclick="updateRequest('31230002')">Cập nhật</button>
-                        <button onclick="respondRequest('31230002')">Phản hồi</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Chi tiết yêu cầu -->
-    <div class="card" id="requestDetailCard">
-        <h3>Chi tiết yêu cầu phúc khảo</h3>
-        <p>Chọn yêu cầu để xem chi tiết</p>
-    </div>
-`;
+    setTimeout(renderRecheckTable, 0);
     break;
 
 
         case "ketqua":
-    cards = `
-    <!-- Danh sách kết quả thi -->
-    <div class="card" style="grid-column: 1 / -1;">
+            cards = `
+    <!-- FR33 – Danh sách kết quả -->
+    <div class="card" style="grid-column:1/-1;">
         <h3>Danh sách kết quả thi</h3>
-        <input type="text" id="searchResultInput" placeholder="Tìm kiếm theo mã SV, họ tên, SBD, môn..." style="width:100%; padding:8px; margin-bottom:10px;">
-        <button onclick="searchResult()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <div class="search-bar">
+            <input id="searchResult" type="text" placeholder="Tìm theo MSSV, họ tên, môn thi..." style="width:80%">
+            <button onclick="searchResult()">Tìm kiếm</button>
+            <button onclick="exportCSV()">Xuất CSV</button>
+        </div>
         <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-            <thead>
-                <tr style="background:#f0f0f0;">
-                    <th>Mã SV</th>
-                    <th>Họ tên</th>
-                    <th>SBD</th>
-                    <th>Môn thi</th>
-                    <th>Nghe</th>
-                    <th>Đọc</th>
-                    <th>Viết</th>
-                    <th>Nói</th>
-                    <th>Tổng điểm</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="resultTable">
-                <tr>
-                    <td>31230001</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>001</td>
-                    <td>Tiếng Anh</td>
-                    <td>8.0</td>
-                    <td>7.5</td>
-                    <td>7.0</td>
-                    <td>8.5</td>
-                    <td>7.75</td>
-                    <td>Đã phê duyệt</td>
-                    <td>
-                        <button onclick="viewResultDetail('31230001')">Xem</button>
-                        <button onclick="updateResult('31230001')">Nhập/Cập nhật</button>
-                        <button onclick="approveResult('31230001')">Phê duyệt</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>31230002</td>
-                    <td>Trần Thị B</td>
-                    <td>002</td>
-                    <td>Tiếng Anh</td>
-                    <td>7.5</td>
-                    <td>8.0</td>
-                    <td>7.0</td>
-                    <td>7.5</td>
-                    <td>7.5</td>
-                    <td>Chưa phê duyệt</td>
-                    <td>
-                        <button onclick="viewResultDetail('31230002')">Xem</button>
-                        <button onclick="updateResult('31230002')">Nhập/Cập nhật</button>
-                        <button onclick="approveResult('31230002')">Phê duyệt</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <button onclick="exportCSV()" style="margin-top:10px;">Xuất CSV</button>
+    <thead>
+        <tr style="background:#f0f0f0;">
+            <th>MSSV</th>
+            <th>Họ tên</th>
+            <th>Số báo danh</th>
+            <th>Môn thi</th>
+            <th>Nghe</th>
+            <th>Đọc</th>
+            <th>Viết</th>
+            <th>Nói</th>
+            <th>Tổng điểm</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody id="resultTable">
+        ${Object.values(examResults).map(r => `
+            <tr>
+                <td>${r.mssv}</td>
+                <td>${r.name}</td>
+                <td>${r.candidateNo}</td>
+                <td>${r.subject}</td>
+                <td>${r.listening}</td>
+                <td>${r.reading}</td>
+                <td>${r.writing}</td>
+                <td>${r.speaking}</td>
+                <td>${r.total}</td>
+                <td>${r.status}</td>
+                <td class="action-cell">
+                    <button class="action-button" onclick="viewExamDetail('${r.id}')">Xem</button>
+                    <button class="action-button" onclick="editExamResult('${r.id}')">Cập nhật</button>
+                    <button class="action-button" onclick="approveExamResult('${r.id}')">Phê duyệt</button>
+                    <button class="action-button" onclick="publishExamResult('${r.id}')">Công bố</button>
+                </td>
+            </tr>
+        `).join("")}
+    </tbody>
+</table>
     </div>
 
-    <!-- Chi tiết kết quả thi -->
-    <div class="card" id="resultDetailCard">
-        <h3>Chi tiết kết quả thi</h3>
-        <p>Chọn thí sinh để xem chi tiết kết quả</p>
+    <!-- FR34 – Chi tiết kết quả -->
+    <div class="card" id="examDetailCard">
+        <h3>Chi tiết kết quả</h3>
+        <p>Chọn một thí sinh để xem chi tiết kết quả</p>
     </div>
-`;
+
+    <!-- FR35 – Nhập/cập nhật -->
+    <div class="card" id="editExamCard">
+        <h3>Nhập/Cập nhật kết quả</h3>
+        <form style="display:flex; flex-direction:column; gap:10px;">
+            <input id="editListening" type="number" placeholder="Nghe">
+            <input id="editReading" type="number" placeholder="Đọc">
+            <input id="editWriting" type="number" placeholder="Viết">
+            <input id="editSpeaking" type="number" placeholder="Nói">
+            <button type="button" onclick="saveExamResult()">Lưu kết quả</button>
+        </form>
+    </div>
+    `;
     break;
 
 
         case "vipham":
-    cards = `
-    <!-- Danh sách thí sinh vi phạm -->
-    <div class="card" style="grid-column: 1 / -1;">
+            cards = `
+    <!-- FR40 – Danh sách thí sinh vi phạm -->
+    <div class="card" style="grid-column:1/-1;">
         <h3>Danh sách thí sinh vi phạm</h3>
-        <input type="text" id="searchStudentViolation" placeholder="Tìm kiếm theo mã SV, họ tên, phòng..." style="width:100%; padding:8px; margin-bottom:10px;">
-        <button onclick="searchStudentViolation()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
+        <div class="search-bar">
+            <input id="searchViolation" type="text" placeholder="Tìm theo MSSV, họ tên, phòng thi..." style="width:70%">
+            <button onclick="searchViolation()">Tìm kiếm</button>
+        </div>
         <table style="width:100%; border-collapse:collapse; margin-top:10px;">
             <thead>
                 <tr style="background:#f0f0f0;">
-                    <th>Mã SV</th>
+                    <th>MSSV</th>
                     <th>Họ tên</th>
                     <th>SBD</th>
                     <th>Phòng thi</th>
@@ -701,66 +823,45 @@ function loadPage(page, titleText) {
                     <th>Thao tác</th>
                 </tr>
             </thead>
-            <tbody id="studentViolationTable">
-                <tr>
-                    <td>31230001</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>001</td>
-                    <td>101</td>
-                    <td>Copy bài</td>
-                    <td>10:15 12/12/2025</td>
-                    <td>Chưa xử lý</td>
-                    <td>
-                        <button onclick="viewViolationDetail('31230001')">Xem</button>
-                        <button onclick="updateViolation('31230001')">Cập nhật</button>
-                        <button onclick="approveViolation('31230001')">Phê duyệt</button>
-                    </td>
-                </tr>
+            <tbody id="violationTable">
+                ${Object.values(violations).map(v => `
+                    <tr>
+                        <td>${v.mssv || ""}</td>
+                        <td>${v.name}</td>
+                        <td>${v.candidateNo || ""}</td>
+                        <td>${v.room}</td>
+                        <td>${v.type}</td>
+                        <td>${v.time}</td>
+                        <td>${v.status}</td>
+                        <td class="action-cell">
+    <button onclick="viewViolationDetail('${v.id}')">Xem</button>
+    <button onclick="editViolation('${v.id}')">Cập nhật</button>
+    <button onclick="approveViolation('${v.id}')">Phê duyệt</button>
+</td>
+                    </tr>
+                `).join("")}
             </tbody>
         </table>
     </div>
 
-    <!-- Danh sách CBCT vi phạm -->
-    <div class="card" style="grid-column: 1 / -1;">
-        <h3>Danh sách CBCT vi phạm</h3>
-        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-            <thead>
-                <tr style="background:#f0f0f0;">
-                    <th>Họ tên</th>
-                    <th>Vai trò</th>
-                    <th>Phòng thi</th>
-                    <th>Nội dung vi phạm</th>
-                    <th>Thời điểm</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="staffViolationTable">
-                <tr>
-                    <td>Trần Thị B</td>
-                    <td>Cán bộ coi thi</td>
-                    <td>102</td>
-                    <td>Không giám sát đầy đủ</td>
-                    <td>09:45 12/12/2025</td>
-                    <td>Chưa xử lý</td>
-                    <td>
-                        <button onclick="viewViolationDetail('staff102')">Xem</button>
-                        <button onclick="updateViolation('staff102')">Cập nhật</button>
-                        <button onclick="approveViolation('staff102')">Phê duyệt</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Chi tiết vi phạm -->
+    <!-- FR42 – Chi tiết vi phạm -->
     <div class="card" id="violationDetailCard">
         <h3>Chi tiết vi phạm</h3>
         <p>Chọn một vụ vi phạm để xem chi tiết</p>
     </div>
-`;
-    break;
 
+    <!-- FR43 – Cập nhật vi phạm -->
+    <div class="card" id="editViolationCard">
+        <h3>Cập nhật vi phạm</h3>
+        <form style="display:flex; flex-direction:column; gap:10px;">
+            <input id="editType" type="text" placeholder="Hình thức vi phạm">
+            <input id="editSeverity" type="text" placeholder="Mức độ vi phạm">
+            <textarea id="editNotes" placeholder="Ghi chú, biên bản đính kèm"></textarea>
+            <button type="button" onclick="saveViolation()">Lưu thông tin</button>
+        </form>
+    </div>
+    `;
+    break;
 
         case "hoidong":
     cards = `
@@ -806,50 +907,75 @@ function loadPage(page, titleText) {
 
 
         case "chungchi":
-    cards = `
-    <!-- Danh sách chứng chỉ -->
-    <div class="card" style="grid-column: 1 / -1;">
-        <h3>Danh sách chứng chỉ</h3>
-        <input type="text" id="searchCertificate" placeholder="Tìm kiếm theo mã chứng chỉ, họ tên, SBD..." style="width:100%; padding:8px; margin-bottom:10px;">
-        <button onclick="searchCertificate()" style="padding:8px 16px; margin-bottom:10px;">Tìm kiếm</button>
-        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-            <thead>
-                <tr style="background:#f0f0f0;">
-                    <th>Mã chứng chỉ</th>
-                    <th>Họ tên</th>
-                    <th>SBD</th>
-                    <th>Kỳ thi</th>
-                    <th>Trình độ</th>
-                    <th>Ngày cấp</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="certificateTable">
-                <tr>
-                    <td>CERT001</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>001</td>
-                    <td>Đợt 1/2025</td>
-                    <td>Bậc 3</td>
-                    <td>15/12/2025</td>
-                    <td>Đã phát hành</td>
-                    <td>
-                        <button onclick="viewCertificateDetail('CERT001')">Xem</button>
-                        <button onclick="issueCertificate('CERT001')">Phát hành</button>
-                        <button onclick="downloadCertificate('CERT001')">Tải PNG</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            cards = `
+    <div class="cards-container" style="display:flex; flex-direction:column; gap:20px;">
+        <!-- FR56 – Xem danh sách chứng chỉ -->
+        <div class="card" style="padding:16px; border-radius:8px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <h3>Danh sách chứng chỉ</h3>
+            <div class="search-bar" style="margin-bottom:10px;">
+                <input id="searchCertificate" type="text" placeholder="Tìm theo mã, họ tên, kỳ thi..." style="width:70%;">
+                <button onclick="searchCertificate()">Tìm kiếm</button>
+            </div>
+            <table style="width:100%; margin-top:10px; border-collapse: collapse;">
+                <thead>
+                    <tr style="background:#f0f0f0;">
+                        <th>Mã chứng chỉ</th>
+                        <th>Họ tên</th>
+                        <th>Số báo danh</th>
+                        <th>Kỳ thi</th>
+                        <th>Trình độ</th>
+                        <th>Ngày cấp</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="certificateTable">
+                    ${Object.values(certificates).map(c => `
+                        <tr>
+                            <td>${c.code}</td>
+                            <td>${c.name}</td>
+                            <td>${c.examNumber}</td>
+                            <td>${c.exam}</td>
+                            <td>${c.level}</td>
+                            <td>${c.issuedDate}</td>
+                            <td>${c.status}</td>
+                            <td class="action-cell">
+                                <button onclick="viewCertificate('${c.id}')">Xem chi tiết</button>
+                                <button onclick="issueCertificate('${c.id}')">Phát hành</button>
+                                <button onclick="downloadCertificate('${c.id}')">Tải PNG</button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Chi tiết chứng chỉ -->
-    <div class="card" id="certificateDetailCard">
-        <h3>Chi tiết chứng chỉ</h3>
-        <p>Chọn một chứng chỉ để xem chi tiết</p>
+        <!-- FR58 – Thông tin nhận chứng chỉ bản cứng -->
+        <div class="card" style="padding:16px; border-radius:8px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <h3>Thông tin nhận chứng chỉ bản cứng</h3>
+            <table style="width:100%; margin-top:10px; border-collapse: collapse;">
+                <thead>
+                    <tr style="background:#f0f0f0;">
+                        <th>Họ tên</th>
+                        <th>Hình thức nhận</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody id="physicalCertificateTable">
+                    ${Object.values(certificates).map(c => `
+                        <tr>
+                            <td>${c.name}</td>
+                            <td>${c.deliveryMethod || "-"}</td>
+                            <td>${c.address || "-"}</td>
+                            <td>${c.physicalStatus || "-"}</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
     </div>
-`;
+    `;
     break;
 
 
@@ -918,89 +1044,215 @@ function loadPage(page, titleText) {
     break;
 
 
-        case "phanhoi":
+    case "phanhoi":
     cards = `
-    <!-- Tạo phản hồi mới -->
+    <!-- FR74 – Tạo form khảo sát mới -->
     <div class="card">
-        <h3>Tạo phản hồi khảo sát mới</h3>
-        <form id="newFeedbackForm" style="display:flex; flex-direction:column; gap:8px;">
-            <input type="text" id="fbName" placeholder="Họ tên" required>
-            <input type="text" id="fbRole" placeholder="Đối tượng (Thí sinh/CBTG)" required>
-            <input type="text" id="fbExam" placeholder="Kỳ thi" required>
-            <textarea id="fbContent" placeholder="Nhập phản hồi..." rows="4" style="padding:6px;"></textarea>
-            <button type="button" onclick="addFeedback()">Lưu phản hồi</button>
+        <h3>Tạo form khảo sát mới</h3>
+        <form style="display:flex; flex-direction:column; gap:8px;">
+            <input id="surveyTitle" type="text" placeholder="Tiêu đề khảo sát">
+            <textarea id="surveyQuestions" rows="4" placeholder="Nhập câu hỏi (mỗi câu 1 dòng)"></textarea>
+            <button type="button" onclick="createSurvey()">Tạo form khảo sát</button>
         </form>
     </div>
 
-    <!-- Danh sách phản hồi -->
+    <!-- FR75 – Gửi khảo sát tự động -->
+    <div class="card">
+        <h3>Gửi khảo sát tự động sau kỳ thi</h3>
+        <select id="surveySelect" style="padding:6px;">
+            <option value="">-- Chọn form khảo sát --</option>
+        </select>
+        <button type="button" onclick="sendSurveyEmail()">Gửi email</button>
+    </div>
+
+    <!-- FR76 – Xem danh sách phản hồi -->
     <div class="card" style="grid-column:1/-1;">
-        <h3>Danh sách phản hồi</h3>
+        <h3>Danh sách phản hồi khảo sát</h3>
         <table style="width:100%; border-collapse:collapse; margin-top:10px;">
             <thead>
                 <tr style="background:#f0f0f0;">
-                    <th>Họ tên</th>
-                    <th>Đối tượng</th>
                     <th>Kỳ thi</th>
-                    <th>Nội dung</th>
+                    <th>Đối tượng</th>
+                    <th>Ngày gửi</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
             </thead>
-            <tbody id="feedbackTable"></tbody>
+            <tbody id="surveyResponsesTable"></tbody>
         </table>
     </div>
 
-    <!-- Chi tiết phản hồi -->
-    <div class="card" id="feedbackDetailCard">
+    <!-- FR77 – Xem chi tiết phản hồi -->
+    <div class="card" id="surveyDetailCard">
         <h3>Chi tiết phản hồi</h3>
         <p>Chọn phản hồi để xem chi tiết</p>
     </div>
+
+    <!-- FR78 – Phân tích kết quả khảo sát -->
+    <div class="card">
+        <h3>Phân tích và tổng hợp kết quả khảo sát</h3>
+        <button onclick="analyzeSurvey()">Xem Dashboard</button>
+    </div>
+
+    <!-- FR79 – Xuất báo cáo khảo sát -->
+    <div class="card">
+        <h3>Xuất báo cáo khảo sát phản hồi</h3>
+        <button onclick="exportSurveyReport('csv')">Xuất CSV</button>
+        <button onclick="exportSurveyReport('excel')">Xuất Excel</button>
+    </div>
     `;
+
+    // Load danh sách khảo sát vào select
+    setTimeout(() => {
+        const select = document.getElementById("surveySelect");
+        select.innerHTML = `<option value="">-- Chọn form khảo sát --</option>`;
+        surveys.forEach(s => {
+            const opt = document.createElement("option");
+            opt.value = s.id;
+            opt.innerText = s.title;
+            select.appendChild(opt);
+        });
+        renderSurveyResponses();
+    }, 0);
     break;
+
 
 case "banchucnang":
     cards = `
-    <!-- Tạo/Quản lý ban chức năng -->
-    <div class="card">
-        <h3>Quản lý Ban chức năng</h3>
-        <form id="newBanForm" style="display:flex; flex-direction:column; gap:8px;">
-            <input type="text" id="banName" placeholder="Tên ban chức năng" required>
-            <input type="text" id="banTask" placeholder="Nhiệm vụ" required>
-            <input type="text" id="banExam" placeholder="Kỳ thi áp dụng" required>
-            <button type="button" onclick="addBan()">Tạo Ban</button>
-        </form>
-    </div>
+    <div class="cards-container" style="display:flex; flex-direction:column; gap:20px;">
+        <!-- FR48, FR54 – Ban chức năng kỳ thi -->
+        <div class="card" style="padding:16px; border-radius:8px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <h3>Ban chức năng kỳ thi</h3>
+            <button onclick="addFunctionalUnit()" style="margin-bottom:10px;">Thêm ban chức năng</button>
+            <table style="width:100%; margin-top:10px; border-collapse: collapse;">
+                <thead>
+                    <tr style="background:#f0f0f0;">
+                        <th>Tên ban</th>
+                        <th>Nhiệm vụ</th>
+                        <th>Kỳ thi áp dụng</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="functionalUnitsTable">
+                    ${Object.values(functionalUnits).map(u => `
+                        <tr>
+                            <td>${u.name}</td>
+                            <td>${u.task}</td>
+                            <td>${u.exam}</td>
+                            <td>${u.status}</td>
+                            <td>
+                                <button onclick="editFunctionalUnit('${u.id}')">Sửa</button>
+                                <button onclick="approveFunctionalUnit('${u.id}')">Phê duyệt</button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Danh sách Ban -->
-    <div class="card" style="grid-column:1/-1;">
-        <h3>Danh sách Ban chức năng</h3>
-        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-            <thead>
-                <tr style="background:#f0f0f0;">
-                    <th>Tên Ban</th>
-                    <th>Nhiệm vụ</th>
-                    <th>Kỳ thi</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="banTable"></tbody>
-        </table>
+        <!-- FR49–FR52 – Phân công nhân sự -->
+        <div class="card" style="padding:16px; border-radius:8px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <h3>Danh sách nhân sự kỳ thi</h3>
+            <div class="search-bar" style="margin-bottom:10px;">
+                <input id="searchStaff" type="text" placeholder="Tìm theo họ tên, đơn vị, ban chức năng..." style="width:70%;">
+                <button onclick="searchStaff()">Tìm kiếm</button>
+                <button onclick="exportStaffCSV()">Xuất CSV</button>
+            </div>
+            <table style="width:100%; margin-top:10px; border-collapse: collapse;">
+                <thead>
+                    <tr style="background:#f0f0f0;">
+                        <th>Họ tên</th>
+                        <th>Đơn vị</th>
+                        <th>Ban chức năng</th>
+                        <th>Vai trò</th>
+                        <th>Ca/Phòng</th>
+                        <th>Trạng thái tham gia</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="staffTable">
+                    ${Object.values(staffs).map(s => `
+                        <tr>
+                            <td>${s.name}</td>
+                            <td>${s.unit}</td>
+                            <td>${s.functionalUnit}</td>
+                            <td>${s.role}</td>
+                            <td>${s.schedule || ""}</td>
+                            <td>${s.status}</td>
+                            <td class="action-cell">
+                                <button onclick="assignSchedule('${s.id}')">Phân công lịch</button>
+                                <button onclick="updateStaffStatus('${s.id}')">Cập nhật trạng thái</button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
     </div>
+`;
 
-    <!-- Chi tiết nhân sự & phân công -->
-    <div class="card" id="banDetailCard">
-        <h3>Chi tiết Ban & Phân công cán bộ</h3>
-        <p>Chọn ban để xem chi tiết phân công và lịch nhiệm vụ</p>
-    </div>
-    `;
     break;
 
+case "thongbao":
+            cards = `
+            <div class="card" style="grid-column:1/-1;">
+                <h3>Tra cứu thông báo</h3>
+                <input type="text" placeholder="Tiêu đề, loại thông báo, trạng thái..." style="width:85%">
+                <button onclick="searchNotification()">Tìm kiếm</button>
+            </div>
+
+            <div class="card" style="grid-column:1/-1;">
+                <h3>Danh sách thông báo</h3>
+                <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                    <thead>
+                        <tr style="background:#f0f0f0;">
+                            <th>Tiêu đề</th>
+                            <th>Loại</th>
+                            <th>Ngày gửi</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notificationTable"></tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Chi tiết thông báo</h3>
+                <p id="notificationDetail">Chọn thông báo để xem nội dung</p>
+            </div>
+
+            <div class="card">
+    <h3>Gửi thông báo</h3>
+
+    <!-- Thông báo thủ công -->
+    <div class="notify-section">
+        <button onclick="sendManualNotification()">Gửi thông báo thủ công</button>
+    </div>
+
+    <!-- Thông báo tự động -->
+    <div class="notify-section auto-notify-buttons">
+        <button onclick="sendAutoNotification('Mở đăng ký')">Mở đăng ký</button>
+        <button onclick="sendAutoNotification('Xác nhận dự thi')">Xác nhận dự thi</button>
+        <button onclick="sendAutoNotification('Hoàn thành bài thi')">Hoàn thành bài thi</button>
+        <button onclick="sendAutoNotification('Công bố kết quả')">Công bố kết quả</button>
+    </div>
+</div>
+            `;
+            break;
     }
 
     headerTitle.innerText = titleText;
     content.innerHTML = `<div class="card-grid">${cards}</div>`;
 }
+
+document.querySelector(".notify").addEventListener("click", function () {
+    menuItems.forEach(li => li.classList.remove("active"));
+    const notifyMenu = document.querySelector(".sidebar li[data-page='thongbao']");
+    notifyMenu.classList.add("active");
+    loadPage("thongbao", "🔔 Quản lý thông báo");
+});
 
 // Mock data (giả lập CSDL)
 const candidates = {
@@ -1014,7 +1266,7 @@ const candidates = {
     "31230002": {
         name: "Trần Thị B",
         mssv: "31230002",
-        dotthi: "Đợt 1/2025",
+        dotthi: "Đợt 6/2025",
         status: "Chờ rà soát",
         papers: "CCCD"
     }
@@ -1056,364 +1308,614 @@ function searchCandidate() {
                 ? ""
                 : "none";
     });
-
 }
 
-// Mock data đề thi
-const exams = {
-    "THI001": {
-        name: "Đề thử 1",
-        dotthi: "Đợt 1/2025",
-        status: "Đã duyệt",
-        matrix: "Nghe, Đọc, Viết, Nói",
-        structure: "Chuẩn 6 bậc"
+// ================= MOCK DATA – BỘ ĐỀ GỐC =================
+const originalExamSets = {
+    "BG001": {
+        id: "BG001",
+        name: "Bộ đề VSTEP B1 Chuẩn",
+        structure: "Nghe – Đọc – Viết – Nói",
+        level: "B1",
+        totalQuestions: 120
     },
-    "THI002": {
-        name: "Đề thử 2",
-        dotthi: "Đợt 1/2025",
+    "BG002": {
+        id: "BG002",
+        name: "Bộ đề VSTEP B2 Chuẩn",
+        structure: "Nghe – Đọc – Viết",
+        level: "B2",
+        totalQuestions: 100
+    }
+};
+// ================= MOCK DATA – ĐỀ THI THỬ =================
+const examTests = {
+    "DT001": {
+        code: "DT001",
+        kyThi: "VSTEP UEH 2025",
+        structure: "Nghe – Đọc – Viết – Nói",
+        level: "B1",
+        status: "Đã duyệt",
+        questions: 120,
+        examFile: "DT001_de.pdf",
+        answerFile: "DT001_dapan.pdf",
+        originSet: "BG001"
+    },
+    "DT002": {
+        code: "DT002",
+        kyThi: "VSTEP UEH 2025",
+        structure: "Nghe – Đọc – Viết",
+        level: "B2",
         status: "Chờ duyệt",
-        matrix: "Nghe, Đọc, Viết, Nói",
-        structure: "Chuẩn 6 bậc"
+        questions: 100,
+        examFile: null,
+        answerFile: null,
+        originSet: "BG002"
     }
 };
 
-// Xem chi tiết đề thi
-function viewExamDetail(examId) {
-    const e = exams[examId];
+// FR11 – Xem chi tiết đề
+function viewExamDetail(code) {
+    const e = examTests[code];
     document.getElementById("examDetailCard").innerHTML = `
-        <h3>Chi tiết đề thi: ${examId}</h3>
-        <p><b>Tên đề:</b> ${e.name}</p>
-        <p><b>Đợt thi:</b> ${e.dotthi}</p>
+        <h3>Chi tiết đề thi ${e.code}</h3>
+        <p><b>Kỳ thi:</b> ${e.kyThi}</p>
+        <p><b>Cấu trúc:</b> ${e.structure}</p>
+        <p><b>Trình độ:</b> ${e.level}</p>
         <p><b>Trạng thái:</b> ${e.status}</p>
-        <p><b>Ma trận đề:</b> ${e.matrix}</p>
-        <p><b>Cấu trúc kỹ năng:</b> ${e.structure}</p>
+
+        <p><b>File đề:</b>
+            ${e.examFile
+                ? `<button onclick="downloadFile('${e.examFile}', '${e.status}')">Tải</button>`
+                : "Chưa có"}
+        </p>
+
+        <p><b>File đáp án:</b>
+            ${e.answerFile
+                ? `<button onclick="downloadFile('${e.answerFile}', '${e.status}')">Tải</button>`
+                : "Chưa có"}
+        </p>
     `;
 }
 
-// Sửa đề thi (mock)
-function editExam(examId) {
-    const e = exams[examId];
-    const newName = prompt("Tên đề mới:", e.name);
-    if(newName) {
-        e.name = newName;
-        alert("✔ Đã cập nhật tên đề thi (mock)");
-        loadPage("dethithu", "📝 Quản lý đề thi thử");
-    }
+// FR09 – Sửa đề
+function editExam(code) {
+    const e = examTests[code];
+    document.getElementById("examCode").value = e.code;
+    document.getElementById("examKyThi").value = e.kyThi;
+    document.getElementById("examStructure").value = e.structure;
+    document.getElementById("examLevel").value = e.level;
 }
 
-// Xóa đề thi (mock)
-function deleteExam(examId) {
-    if(confirm(`Bạn có chắc muốn xóa đề ${examId}?`)) {
-        delete exams[examId];
-        alert("✔ Đã xóa đề thi (mock)");
-        loadPage("dethithu", "📝 Quản lý đề thi thử");
-    }
-}
+// FR07 + FR08 – Lưu / tạo mã đề
+function saveExam() {
+    const code = document.getElementById("examCode").value;
+    const kyThi = document.getElementById("examKyThi").value;
+    const structure = document.getElementById("examStructure").value;
+    const level = document.getElementById("examLevel").value;
 
-// Đăng tải đề thi mới (mock)
-function uploadExam() {
-    const fileInput = document.getElementById("fileInput").files[0];
-    const matrix = document.getElementById("matrixInput").value;
-    const structure = document.getElementById("structureInput").value;
+    const examFileInput = document.getElementById("examFile");
+    const answerFileInput = document.getElementById("answerFile");
 
-    if(!fileInput || !matrix || !structure) {
-        alert("Vui lòng điền đầy đủ thông tin!");
+    if (!code) {
+        alert("⚠ Vui lòng nhập mã đề");
         return;
     }
 
-    const newId = "THI" + String(Object.keys(exams).length + 1).padStart(3,'0');
-    exams[newId] = {
-        name: fileInput.name,
-        dotthi: "Đợt 1/2025",
+    examTests[code] = {
+        code,
+        kyThi,
+        structure,
+        level,
         status: "Chờ duyệt",
-        matrix: matrix,
-        structure: structure
+        questions: 0,
+        examFile: examFileInput.files[0]?.name || null,
+        answerFile: answerFileInput.files[0]?.name || null
     };
-    alert(`✔ Đã đăng tải đề thi mới: ${fileInput.name} (mock)`);
+
+    alert("✔ Đã lưu đề + file (mock)");
     loadPage("dethithu", "📝 Quản lý đề thi thử");
 }
 
-// Mock data kế hoạch thi
-const plans = {
-    "plan1": {
-        name: "Đợt 1/2025",
-        date: "15/01/2025",
-        shift: "Ca 1",
-        candidates: 50,
-        status: "Chờ duyệt",
-        format: "Trên máy tính",
-        structure: "Chuẩn 6 bậc",
-        committee: "Hội đồng A"
-    },
-    "plan2": {
-        name: "Đợt 2/2025",
-        date: "20/02/2025",
-        shift: "Ca 2",
-        candidates: 80,
-        status: "Đã duyệt",
-        format: "Trên máy tính",
-        structure: "Chuẩn 6 bậc",
-        committee: "Hội đồng B"
-    }
-};
-
-// Xem chi tiết kế hoạch
-function viewPlanDetail(planId) {
-    const p = plans[planId];
-    document.getElementById("planDetailCard").innerHTML = `
-        <h3>Chi tiết kế hoạch: ${p.name}</h3>
-        <p><b>Ngày thi:</b> ${p.date}</p>
-        <p><b>Ca thi:</b> ${p.shift}</p>
-        <p><b>Số lượng thí sinh dự kiến:</b> ${p.candidates}</p>
-        <p><b>Trạng thái:</b> ${p.status}</p>
-        <p><b>Hình thức thi:</b> ${p.format}</p>
-        <p><b>Cấu trúc bài thi:</b> ${p.structure}</p>
-        <p><b>Hội đồng/Tổ chức thi:</b> ${p.committee}</p>
-    `;
-}
-
-// Sửa kế hoạch (mock)
-function editPlan(planId) {
-    const p = plans[planId];
-    const newName = prompt("Tên kế hoạch mới:", p.name);
-    if(newName) {
-        p.name = newName;
-        alert("✔ Đã cập nhật kế hoạch thi (mock)");
-        loadPage("kehoach", "📅 Quản lý kế hoạch thi");
-    }
-}
-
-// Duyệt kế hoạch (mock)
-function approvePlan(planId) {
-    const p = plans[planId];
-    if(confirm(`Bạn có muốn duyệt kế hoạch ${p.name}?`)) {
-        p.status = "Đã duyệt";
-        alert("✔ Kế hoạch đã được duyệt (mock)");
-        loadPage("kehoach", "📅 Quản lý kế hoạch thi");
-    }
-}
-
-// Tạo kế hoạch mới (mock)
-function createPlan() {
-    const name = document.getElementById("planName").value;
-    const date = document.getElementById("planDate").value;
-    const shift = document.getElementById("planShift").value;
-    const candidates = document.getElementById("planCandidates").value;
-    const location = document.getElementById("planLocation").value;
-    const format = document.getElementById("planFormat").value;
-    const structure = document.getElementById("planStructure").value;
-    const committee = document.getElementById("planCommittee").value;
-
-    if(!name || !date || !shift || !candidates) {
-        alert("Vui lòng điền đầy đủ thông tin bắt buộc!");
-        return;
-    }
-
-    const newId = "plan" + (Object.keys(plans).length + 1);
-    plans[newId] = {
-        name, date, shift, candidates, status: "Chờ duyệt",
-        format, structure, committee
-    };
-    alert(`✔ Đã tạo kế hoạch mới: ${name} (mock)`);
-    loadPage("kehoach", "📅 Quản lý kế hoạch thi");
-}
-
-// Tra cứu kế hoạch
-function searchPlan() {
-    const keyword = document.getElementById("searchPlanInput").value.toLowerCase();
-    const rows = document.querySelectorAll("#planTable tr");
-
-    rows.forEach(row => {
-        row.style.display =
-            row.innerText.toLowerCase().includes(keyword)
-                ? ""
-                : "none";
+// FR12 – Tra cứu
+function searchExam() {
+    const keyword = document.getElementById("searchExam").value.toLowerCase();
+    document.querySelectorAll("#examTable tr").forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword)
+            ? ""
+            : "none";
     });
 }
 
-// Mock data phòng thi
-const rooms = {
-    "P001": {
-        code: "P001",
-        location: "Phòng A101",
-        shift: "Ca 1",
-        subject: "Tiếng Anh",
-        capacity: 50,
-        candidates: 48,
-        supervisors: "Nguyễn Văn A",
-        format: "Máy",
-        status: "Đã phân",
-        students: ["31230001", "31230002", "31230003"]
+// FR13 – Tải PDF
+function downloadPDF(code) {
+    const e = examTests[code];
+    if (!e.file) {
+        alert("⛔ Đề chưa được phê duyệt, không thể tải");
+        return;
+    }
+    alert(`⬇ Đang tải file ${e.file} (mock)`);
+}
+
+// FR08 – Tạo mã đề từ bộ đề gốc
+function generateFromOriginal() {
+    const originId = document.getElementById("originSet").value;
+    const count = parseInt(document.getElementById("numOfCodes").value);
+    const list = document.getElementById("generatedList");
+
+    if (!originId || !count || count <= 0) {
+        alert("⚠ Vui lòng chọn bộ đề và nhập số lượng hợp lệ");
+        return;
+    }
+
+    const base = originalExamSets[originId];
+    list.innerHTML = "";
+
+    for (let i = 1; i <= count; i++) {
+        const code =
+            originId + "-DT" + String(Date.now()).slice(-4) + i;
+
+        examTests[code] = {
+            code,
+            kyThi: "VSTEP UEH 2025",
+            structure: base.structure,
+            level: base.level,
+            status: "Chờ duyệt",
+            skills: base.structure.split("–").map(s => s.trim()),
+            questions: base.totalQuestions,
+            file: null,
+            originSet: originId
+        };
+
+        const li = document.createElement("li");
+        li.innerText = `${code} (từ ${base.name})`;
+        list.appendChild(li);
+    }
+
+    alert("✔ Đã tạo mã đề từ bộ đề gốc");
+    loadPage("dethithu", "📝 Quản lý đề thi thử");
+}
+
+function downloadFile(filename, status) {
+    if (status !== "Đã duyệt") {
+        alert("⛔ Đề chưa được duyệt, không thể tải file");
+        return;
+    }
+    alert(`⬇ Đang tải ${filename} (mock)`);
+}
+
+// ================= MOCK DATA – KẾ HOẠCH THI =================
+const examPlans = {
+    "KH001": {
+        code: "KH001",
+        date: "2025-03-20",
+        round: "Đợt 1/2025",
+        location: "Cơ sở A – UEH",
+        structure: "Bậc 3–5 (6 bậc)",
+        quantity: 300,
+        council: "Hội đồng thi UEH",
+        status: "Chờ duyệt"
     },
-    "P002": {
-        code: "P002",
-        location: "Phòng B202",
-        shift: "Ca 2",
-        subject: "Tiếng Anh",
-        capacity: 60,
-        candidates: 55,
-        supervisors: "Trần Thị B",
-        format: "Máy",
-        status: "Chưa phân",
-        students: ["31230004","31230005"]
+    "KH002": {
+        code: "KH002",
+        date: "2025-06-15",
+        round: "Đợt 2/2025",
+        location: "Cơ sở B – UEH",
+        structure: "Bậc 3–5 (6 bậc)",
+        quantity: 450,
+        council: "Hội đồng thi UEH",
+        status: "Đã duyệt"
     }
 };
 
-// Xem chi tiết phòng
-function viewRoomDetail(roomId) {
-    const r = rooms[roomId];
+function viewPlanDetail(code) {
+    const p = examPlans[code];
+    document.getElementById("planDetailCard").innerHTML = `
+        <h3>Chi tiết kế hoạch ${p.code}</h3>
+        <p><b>Ngày thi:</b> ${p.date}</p>
+        <p><b>Đợt thi:</b> ${p.round}</p>
+        <p><b>Địa điểm:</b> ${p.location}</p>
+        <p><b>Cấu trúc:</b> ${p.structure}</p>
+        <p><b>Số lượng thí sinh:</b> ${p.quantity}</p>
+        <p><b>Hội đồng:</b> ${p.council}</p>
+        <p><b>Trạng thái:</b> ${p.status}</p>
+    `;
+}
+function editPlan(code) {
+    const p = examPlans[code];
+    document.getElementById("planCode").value = p.code;
+    document.getElementById("planDate").value = p.date;
+    document.getElementById("planRound").value = p.round;
+    document.getElementById("planLocation").value = p.location;
+    document.getElementById("planQuantity").value = p.quantity;
+    document.getElementById("planMode").value = p.mode;
+    document.getElementById("planStructure").value = p.structure;
+    document.getElementById("planCouncil").value = p.council;
+}
+function savePlan() {
+    alert("✔ Kế hoạch thi đã được lưu (mock)");
+}
+function approvePlan(code) {
+    examPlans[code].status = "Đã duyệt";
+    alert("✔ Kế hoạch đã được phê duyệt");
+    loadPage("kehoach", "📅 Quản lý kế hoạch thi");
+}
+function searchPlan() {
+    const keyword = document.getElementById("searchPlan").value.toLowerCase();
+    document.querySelectorAll("#planTable tr").forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword)
+            ? ""
+            : "none";
+    });
+}
+
+// ================= MOCK DATA – PHÒNG THI =================
+const examRooms = {
+    "P101": {
+        code: "P101",
+        location: "CS A - Phòng 101",
+        shift: "Ca sáng",
+        subject: "VSTEP B1",
+        capacity: 30,
+        assigned: 28,
+        invigilators: ["GV A", "GV B"],
+        candidates: ["31230001", "31230002"]
+    },
+    "P202": {
+        code: "P202",
+        location: "CS B - Phòng 202",
+        shift: "Ca chiều",
+        subject: "VSTEP B2",
+        capacity: 25,
+        assigned: 20,
+        invigilators: ["GV C"],
+        candidates: []
+    }
+};
+// FR22 – Xem chi tiết phòng thi
+function viewRoom(code) {
+    const r = examRooms[code];
     document.getElementById("roomDetailCard").innerHTML = `
-        <h3>Chi tiết phòng thi: ${r.code}</h3>
+        <h3>Chi tiết phòng ${r.code}</h3>
         <p><b>Địa điểm:</b> ${r.location}</p>
         <p><b>Ca thi:</b> ${r.shift}</p>
         <p><b>Môn thi:</b> ${r.subject}</p>
         <p><b>Sức chứa:</b> ${r.capacity}</p>
-        <p><b>Số thí sinh:</b> ${r.candidates}</p>
-        <p><b>Giám thị:</b> ${r.supervisors}</p>
-        <p><b>Hình thức thi:</b> ${r.format}</p>
-        <p><b>Trạng thái:</b> ${r.status}</p>
-        <p><b>Danh sách thí sinh:</b> ${r.students.join(", ")}</p>
+        <p><b>Đã phân:</b> ${r.assigned}</p>
+        <p><b>Giám thị:</b> ${r.invigilators.join(", ")}</p>
+        <p><b>Thí sinh:</b> ${r.candidates.join(", ") || "Chưa có"}</p>
     `;
 }
 
-// Tạo số báo danh (mock)
-function generateSBD() {
-    const batch = document.getElementById("sbdBatch").value;
-    const rule = document.getElementById("sbdRule").value;
-    if(!batch || !rule) { alert("Điền đầy đủ thông tin!"); return; }
-    alert(`✔ Đã tạo số báo danh cho ${batch} theo quy tắc: ${rule} (mock)`);
+// FR21 – Chia phòng
+function assignRoom(code) {
+    document.getElementById("assignRoomCode").value = code;
 }
 
-// Phân phòng thi (mock)
-function assignRooms() { alert("✔ Phân phòng tự động (mock)"); }
-function manualAssign() { alert("✔ Phân phòng thủ công (mock)"); }
+// Xác nhận chia phòng
+function confirmAssign() {
+    alert("✔ Đã chia phòng (mock)");
+}
 
-// Xuất danh sách phòng (mock)
-function exportRoom(roomId) { alert(`✔ Xuất danh sách phòng ${roomId} (mock)`); }
-
-// Gửi email tự động (mock)
-function sendRoomEmail(roomId) { alert(`✔ Đã gửi email thông báo cho phòng ${roomId} (mock)`); }
-
-// Tra cứu phòng
+// FR25 – Tìm kiếm phòng thi
 function searchRoom() {
-    const keyword = document.getElementById("searchRoomInput").value.toLowerCase();
-    const rows = document.querySelectorAll("#roomTable tr");
-    rows.forEach(row => {
-        row.style.display =
-            row.innerText.toLowerCase().includes(keyword) ? "" : "none";
-    });
-}
-
-// Mock data yêu cầu phúc khảo
-const requests = {
-    "31230001": {
-        code: "31230001",
-        name: "Nguyễn Văn A",
-        class: "KH1",
-        subject: "Tiếng Anh",
-        format: "Máy",
-        scoreBefore: 7.5,
-        content: "Kiểm tra lại phần nghe",
-        date: "20/12/2025",
-        status: "Đang xử lý",
-        officer: "Trần Thị B",
-        scoreAfter: null,
-        diff: null,
-        history: ["20/12: Tiếp nhận", "21/12: Đang chuyển bài"]
-    },
-    "31230002": {
-        code: "31230002",
-        name: "Trần Thị B",
-        class: "KH2",
-        subject: "Tiếng Anh",
-        format: "Máy",
-        scoreBefore: 8.0,
-        content: "Kiểm tra lại phần viết",
-        date: "21/12/2025",
-        status: "Đã có kết quả",
-        officer: "Nguyễn Văn C",
-        scoreAfter: 8.5,
-        diff: 0.5,
-        history: ["21/12: Tiếp nhận", "22/12: Chấm xong", "22/12: Đã phản hồi"]
-    }
-};
-
-// Xem chi tiết yêu cầu
-function viewRequestDetail(code) {
-    const r = requests[code];
-    document.getElementById("requestDetailCard").innerHTML = `
-        <h3>Chi tiết phúc khảo: ${r.code}</h3>
-        <p><b>Họ tên:</b> ${r.name}</p>
-        <p><b>Lớp:</b> ${r.class}</p>
-        <p><b>Môn thi:</b> ${r.subject}</p>
-        <p><b>Hình thức:</b> ${r.format}</p>
-        <p><b>Điểm trước:</b> ${r.scoreBefore}</p>
-        <p><b>Nội dung yêu cầu:</b> ${r.content}</p>
-        <p><b>Ngày gửi:</b> ${r.date}</p>
-        <p><b>Trạng thái:</b> ${r.status}</p>
-        <p><b>Người phụ trách:</b> ${r.officer}</p>
-        <p><b>Lịch sử xử lý:</b> ${r.history.join(" → ")}</p>
-        <p><b>Điểm sau:</b> ${r.scoreAfter ?? "-"}</p>
-        <p><b>Chênh lệch:</b> ${r.diff ?? "-"}</p>
-    `;
-}
-
-// Cập nhật yêu cầu (mock)
-function updateRequest(code) {
-    alert(`✔ Cập nhật yêu cầu phúc khảo ${code} (mock)`);
-}
-
-// Phản hồi yêu cầu (mock)
-function respondRequest(code) {
-    alert(`✔ Ghi nhận phản hồi cho yêu cầu ${code} (mock)`);
-}
-
-// Tìm kiếm yêu cầu
-function searchRequest() {
-    const keyword = document.getElementById("searchRequestInput").value.toLowerCase();
-    const rows = document.querySelectorAll("#requestTable tr");
-    rows.forEach(row => {
+    const keyword = document.getElementById("searchRoom").value.toLowerCase();
+    document.querySelectorAll("#roomTable tr").forEach(row => {
         row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
     });
 }
 
-// Mock data kết quả thi
-const results = {
-    "31230001": {
-        code: "31230001",
+// FR20 – Tạo SBD
+function generateSBD() {
+    alert("✔ Đã tạo số báo danh cho thí sinh (mock)");
+}
+
+// FR23 – Xuất danh sách
+function exportRoom(type) {
+    alert(`📄 Xuất danh sách phòng thi dạng ${type.toUpperCase()} (mock)`);
+}
+
+// FR26 – Gửi email
+function sendEmail(mode) {
+    alert(`✉ Gửi email thông báo (${mode}) – mock`);
+}
+const recheckRequests = [
+    {
+        id: "PK001",
+        mssv: "31230001",
         name: "Nguyễn Văn A",
-        sbd: "001",
-        subject: "Tiếng Anh",
-        listening: 8.0,
-        reading: 7.5,
-        writing: 7.0,
-        speaking: 8.5,
-        total: 7.75,
-        status: "Đã phê duyệt",
-        note: ""
+        class: "K45.01",
+        subject: "Tiếng Anh B1",
+        form: "Thi máy",
+        beforeScore: 6.25,
+        afterScore: null,
+        reason: "Nghi ngờ thiếu điểm kỹ năng Writing",
+        date: "10/06/2025",
+        status: "Đã tiếp nhận",
+        handler: "TTKTQG",
+        timeline: [
+            "Đã tiếp nhận yêu cầu",
+            "Đang chuyển bài phúc khảo"
+        ]
     },
-    "31230002": {
-        code: "31230002",
+    {
+        id: "PK002",
+        mssv: "31230002",
         name: "Trần Thị B",
-        sbd: "002",
-        subject: "Tiếng Anh",
-        listening: 7.5,
-        reading: 8.0,
-        writing: 7.0,
-        speaking: 7.5,
-        total: 7.5,
+        class: "K44.02",
+        subject: "Tiếng Anh B2",
+        form: "Thi giấy",
+        beforeScore: 5.75,
+        afterScore: null,
+        reason: "Xin kiểm tra lại phần Reading",
+        date: "12/06/2025",
+        status: "Đang chấm phúc khảo",
+        handler: "P.ĐTTX",
+        timeline: [
+            "Đã tiếp nhận yêu cầu",
+            "Đang chuyển bài phúc khảo",
+            "Đang chấm phúc khảo"
+        ]
+    }
+];
+
+let selectedRecheck = null;
+function renderRecheckTable(list = recheckRequests) {
+    const tbody = document.getElementById("recheckTable");
+    tbody.innerHTML = list.map(r => `
+        <tr>
+            <td>${r.mssv}</td>
+            <td>${r.name}</td>
+            <td>${r.subject}</td>
+            <td>${r.beforeScore}</td>
+            <td>${r.date}</td>
+            <td>${r.status}</td>
+            <td>
+                <button onclick="viewRecheck('${r.id}')">Xem</button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+/* FR29 – Xem chi tiết */
+function viewRecheck(id) {
+    selectedRecheck = recheckRequests.find(r => r.id === id);
+
+    document.getElementById("recheckDetailCard").innerHTML = `
+        <h3>Chi tiết yêu cầu phúc khảo</h3>
+        <p><b>MSSV:</b> ${selectedRecheck.mssv}</p>
+        <p><b>Họ tên:</b> ${selectedRecheck.name}</p>
+        <p><b>Lớp:</b> ${selectedRecheck.class}</p>
+        <p><b>Môn thi:</b> ${selectedRecheck.subject}</p>
+        <p><b>Hình thức:</b> ${selectedRecheck.form}</p>
+        <p><b>Điểm trước:</b> ${selectedRecheck.beforeScore}</p>
+        <p><b>Nội dung yêu cầu:</b> ${selectedRecheck.reason}</p>
+        <p><b>Trạng thái:</b> ${selectedRecheck.status}</p>
+    `;
+
+    renderTimeline(selectedRecheck.timeline);
+}
+
+/* FR31 – Timeline */
+function renderTimeline(steps) {
+    const ul = document.getElementById("recheckTimeline");
+    ul.innerHTML = steps.map(s => `<li>${s}</li>`).join("");
+}
+
+/* FR30 – Phản hồi */
+function submitRecheck() {
+    if (!selectedRecheck) {
+        alert("Vui lòng chọn yêu cầu phúc khảo");
+        return;
+    }
+
+    const afterScore = document.getElementById("afterScore").value;
+    const result = document.getElementById("recheckResult").value;
+    const note = document.getElementById("recheckNote").value;
+
+    selectedRecheck.afterScore = afterScore;
+    selectedRecheck.status = "Đã phản hồi";
+    selectedRecheck.timeline.push("Đã có kết quả chấm");
+    selectedRecheck.timeline.push("Đã phản hồi cho thí sinh");
+
+    alert("✔ Đã cập nhật kết quả phúc khảo");
+
+    renderRecheckTable();
+    renderTimeline(selectedRecheck.timeline);
+}
+
+/* FR32 – Tìm kiếm */
+function searchRecheck() {
+    const key = document.getElementById("searchRecheck").value.toLowerCase();
+    const filtered = recheckRequests.filter(r =>
+        r.mssv.includes(key) ||
+        r.name.toLowerCase().includes(key) ||
+        r.subject.toLowerCase().includes(key) ||
+        r.status.toLowerCase().includes(key)
+    );
+    renderRecheckTable(filtered);
+}
+
+// ================= MOCK DATA – THÔNG BÁO =================
+let notifications = [
+    {
+        id: 1,
+        title: "Kế hoạch thi đợt 1/2025",
+        type: "Hệ thống",
+        date: "20/01/2025",
+        content: "Thông báo về kế hoạch thi đợt 1/2025...",
+        status: "Chưa đọc",
+        recipients: "Toàn bộ thí sinh"
+    },
+    {
+        id: 2,
+        title: "Phúc khảo môn Listening",
+        type: "Phúc khảo",
+        date: "22/01/2025",
+        content: "Thông báo về phúc khảo môn Listening...",
+        status: "Đã đọc",
+        recipients: "Thí sinh đợt 1/2025"
+    }
+];
+
+// ================= LOAD CHI TIẾT THÔNG BÁO =================
+function viewNotification(id) {
+    const n = notifications.find(n => n.id === id);
+    if (!n) return;
+
+    // Cập nhật trạng thái đọc
+    if (n.status === "Chưa đọc") {
+        n.status = "Đã đọc";
+        renderNotificationTable();
+    }
+
+    document.getElementById("notificationDetail").innerHTML = `
+        <b>Tiêu đề:</b> ${n.title}<br>
+        <b>Loại:</b> ${n.type}<br>
+        <b>Ngày gửi:</b> ${n.date}<br>
+        <b>Đối tượng nhận:</b> ${n.recipients}<br>
+        <b>Nội dung:</b><br>${n.content}
+    `;
+}
+
+// ================= HIỂN THỊ DANH SÁCH THÔNG BÁO =================
+function renderNotificationTable() {
+    const tbody = document.getElementById("notificationTable");
+    tbody.innerHTML = notifications.map(n => `
+        <tr>
+            <td>${n.title}</td>
+            <td>${n.type}</td>
+            <td>${n.date}</td>
+            <td>${n.status}</td>
+            <td><button onclick="viewNotification(${n.id})">Xem</button></td>
+        </tr>
+    `).join("");
+}
+
+// ================= TRA CỨU THÔNG BÁO =================
+function searchNotification() {
+    const keyword = document.querySelector("#content input[type='text']").value.toLowerCase();
+    document.querySelectorAll("#notificationTable tr").forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// ================= GỬI THÔNG BÁO THỦ CÔNG =================
+function sendManualNotification() {
+    const title = prompt("Nhập tiêu đề thông báo:");
+    if (!title) return alert("⚠ Tiêu đề bắt buộc");
+    const type = prompt("Nhập loại thông báo:");
+    const recipients = prompt("Nhập đối tượng nhận (toàn bộ, theo kỳ thi, phòng, vai trò):");
+    const content = prompt("Nhập nội dung thông báo:");
+
+    const newId = notifications.length ? Math.max(...notifications.map(n => n.id)) + 1 : 1;
+    notifications.push({
+        id: newId,
+        title,
+        type: type || "Khác",
+        date: new Date().toLocaleDateString("vi-VN"),
+        content,
+        status: "Chưa đọc",
+        recipients: recipients || "Toàn bộ"
+    });
+
+    renderNotificationTable();
+    alert("✔ Thông báo đã được gửi (mock)");
+}
+
+// ================= GỬI THÔNG BÁO TỰ ĐỘNG =================
+function sendAutoNotification(eventName, recipients="Toàn bộ thí sinh") {
+    const content = `Thông báo tự động: sự kiện "${eventName}" đã xảy ra.`;
+    const newId = notifications.length ? Math.max(...notifications.map(n => n.id)) + 1 : 1;
+    notifications.push({
+        id: newId,
+        title: `Thông báo tự động: ${eventName}`,
+        type: "Hệ thống",
+        date: new Date().toLocaleDateString("vi-VN"),
+        content,
+        status: "Chưa đọc",
+        recipients
+    });
+    renderNotificationTable();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('chatbotToggle');
+    const chatWindow = document.getElementById('chatbotWindow');
+    const closeBtn = document.getElementById('closeChat');
+    const sendBtn = document.getElementById('sendChat');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    toggleBtn.addEventListener('click', () => {
+        chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        chatWindow.style.display = 'none';
+    });
+
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if(!text) return;
+
+        const userMsg = document.createElement('div');
+        userMsg.style.textAlign = 'right';
+        userMsg.style.marginBottom = '6px';
+        userMsg.innerHTML = `<span style="display:inline-block; background:#006571; color:white; padding:6px 10px; border-radius:12px;">${text}</span>`;
+        chatMessages.appendChild(userMsg);
+
+        const botMsg = document.createElement('div');
+        botMsg.style.textAlign = 'left';
+        botMsg.style.marginBottom = '6px';
+        botMsg.innerHTML = `<span style="display:inline-block; background:#eee; color:#333; padding:6px 10px; border-radius:12px;">Xin lỗi, hiện tại chatbot đang ở chế độ demo.</span>`;
+        chatMessages.appendChild(botMsg);
+
+        chatInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') sendMessage();
+    });
+});
+
+const examResults = {
+    "E001": {
+        id: "E001",
+        mssv: "31230001",
+        name: "Nguyễn Văn A",
+        candidateNo: "SBD001",
+        subject: "VSTEP B1",
+        listening: 18,
+        reading: 17,
+        writing: 20,
+        speaking: 19,
+        total: 74,
         status: "Chưa phê duyệt",
-        note: ""
+        notes: ""
+    },
+    "E002": {
+        id: "E002",
+        mssv: "31230002",
+        name: "Trần Thị B",
+        candidateNo: "SBD002",
+        subject: "VSTEP B2",
+        listening: 20,
+        reading: 18,
+        writing: 21,
+        speaking: 20,
+        total: 79,
+        status: "Đã phê duyệt",
+        notes: ""
     }
 };
-
-// Xem chi tiết kết quả
-function viewResultDetail(code) {
-    const r = results[code];
-    document.getElementById("resultDetailCard").innerHTML = `
-        <h3>Chi tiết kết quả thi: ${r.code}</h3>
+// FR34 – Xem chi tiết
+function viewExamDetail(id) {
+    const r = examResults[id];
+    document.getElementById("examDetailCard").innerHTML = `
+        <h3>Chi tiết kết quả ${r.mssv}</h3>
         <p><b>Họ tên:</b> ${r.name}</p>
-        <p><b>SBD:</b> ${r.sbd}</p>
+        <p><b>SBD:</b> ${r.candidateNo}</p>
         <p><b>Môn thi:</b> ${r.subject}</p>
         <p><b>Nghe:</b> ${r.listening}</p>
         <p><b>Đọc:</b> ${r.reading}</p>
@@ -1421,143 +1923,262 @@ function viewResultDetail(code) {
         <p><b>Nói:</b> ${r.speaking}</p>
         <p><b>Tổng điểm:</b> ${r.total}</p>
         <p><b>Trạng thái:</b> ${r.status}</p>
-        <p><b>Ghi chú:</b> ${r.note || "-"}</p>
+        <p><b>Ghi chú:</b> ${r.notes}</p>
     `;
 }
 
-// Nhập/Cập nhật kết quả (mock)
-function updateResult(code) {
-    alert(`✔ Nhập/Cập nhật kết quả thi cho ${code} (mock)`);
+// FR35 – Nhập/cập nhật
+function editExamResult(id) {
+    const r = examResults[id];
+    document.getElementById("editListening").value = r.listening;
+    document.getElementById("editReading").value = r.reading;
+    document.getElementById("editWriting").value = r.writing;
+    document.getElementById("editSpeaking").value = r.speaking;
+    document.getElementById("editExamCard").dataset.id = id;
 }
 
-// Phê duyệt kết quả (mock)
-function approveResult(code) {
-    alert(`✔ Kết quả thi ${code} đã được phê duyệt (mock)`);
+function saveExamResult() {
+    const id = document.getElementById("editExamCard").dataset.id;
+    const r = examResults[id];
+    r.listening = +document.getElementById("editListening").value;
+    r.reading = +document.getElementById("editReading").value;
+    r.writing = +document.getElementById("editWriting").value;
+    r.speaking = +document.getElementById("editSpeaking").value;
+    r.total = r.listening + r.reading + r.writing + r.speaking;
+    r.status = "Chưa phê duyệt";
+    alert("✔ Kết quả đã được lưu (mock)");
+    loadPage("exam_result", "📊 Quản lý kết quả thi");
 }
 
-// Tra cứu & lọc kết quả
+// FR36 – Phê duyệt
+function approveExamResult(id) {
+    const r = examResults[id];
+    r.status = "Đã phê duyệt";
+    r.approver = "Hội đồng thi";
+    r.approveTime = new Date().toLocaleString();
+    alert("✔ Kết quả đã được phê duyệt (mock)");
+    loadPage("exam_result", "📊 Quản lý kết quả thi");
+}
+
+// FR37 – Công bố
+function publishExamResult(id) {
+    const r = examResults[id];
+    if(r.status !== "Đã phê duyệt") {
+        alert("❌ Kết quả chưa được phê duyệt!");
+        return;
+    }
+    r.status = "Đã công bố";
+    alert("✔ Kết quả đã được công bố (mock, email tự động)");
+    loadPage("exam_result", "📊 Quản lý kết quả thi");
+}
+
+// FR38 – Tra cứu (mock, dành cho thí sinh)
+function lookupResult(mssv) {
+    const r = Object.values(examResults).find(x => x.mssv === mssv);
+    if(!r) return alert("Không tìm thấy kết quả");
+    viewExamDetail(r.id);
+}
+
+// FR39 – Xuất CSV
+function exportCSV() {
+    let csv = "MSSV,Họ tên,SBD,Môn thi,Nghe,Đọc,Viết,Nói,Tổng điểm,Trạng thái\n";
+    Object.values(examResults).forEach(r => {
+        csv += `${r.mssv},${r.name},${r.candidateNo},${r.subject},${r.listening},${r.reading},${r.writing},${r.speaking},${r.total},${r.status}\n`;
+    });
+    const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ketqua_thi.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// FR33 – Tìm kiếm
 function searchResult() {
-    const keyword = document.getElementById("searchResultInput").value.toLowerCase();
-    const rows = document.querySelectorAll("#resultTable tr");
-    rows.forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    const keyword = document.getElementById("searchResult").value.toLowerCase();
+    document.querySelectorAll("#resultTable tr").forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword)
+            ? ""
+            : "none";
     });
 }
 
-// Xuất CSV (mock)
-function exportCSV() {
-    alert("✔ Xuất danh sách kết quả thi ra CSV (mock)");
-}
-
-// Mock dữ liệu vi phạm
 const violations = {
-    "31230001": {
-        type: "thí sinh",
-        code: "31230001",
+    "V001": {
+        id: "V001",
+        mssv: "31230001",
         name: "Nguyễn Văn A",
-        sbd: "001",
-        room: "101",
-        violation: "Copy bài",
-        time: "10:15 12/12/2025",
+        candidateNo: "SBD001",
+        room: "P101",
+        type: "Mang điện thoại",
+        time: "2025-12-20 09:15",
         status: "Chưa xử lý",
-        note: ""
+        severity: "Nhẹ",
+        notes: ""
     },
-    "staff102": {
-        type: "CBCT",
-        name: "Trần Thị B",
-        role: "Cán bộ coi thi",
-        room: "102",
-        violation: "Không giám sát đầy đủ",
-        time: "09:45 12/12/2025",
-        status: "Chưa xử lý",
-        note: ""
+    "V002": {
+        id: "V002",
+        name: "CBCT Trần Thị B",
+        role: "Giám thị",
+        room: "P102",
+        type: "Không tuân thủ quy chế",
+        time: "2025-12-20 10:00",
+        status: "Đang xử lý",
+        severity: "Trung bình",
+        notes: ""
     }
 };
-
-// Xem chi tiết vi phạm
-function viewViolationDetail(code) {
-    const v = violations[code];
+// FR42 – Xem chi tiết
+function viewViolationDetail(id) {
+    const v = violations[id];
     document.getElementById("violationDetailCard").innerHTML = `
-        <h3>Chi tiết vi phạm: ${v.code || v.name}</h3>
-        <p><b>Đối tượng:</b> ${v.type}</p>
+        <h3>Chi tiết vi phạm</h3>
+        <p><b>Đối tượng:</b> ${v.mssv || v.name}</p>
         <p><b>Họ tên:</b> ${v.name}</p>
-        ${v.sbd ? `<p><b>SBD:</b> ${v.sbd}</p>` : ""}
+        <p><b>SBD / Vai trò:</b> ${v.candidateNo || v.role || ""}</p>
         <p><b>Phòng thi:</b> ${v.room}</p>
-        ${v.role ? `<p><b>Vai trò:</b> ${v.role}</p>` : ""}
-        <p><b>Hình thức vi phạm:</b> ${v.violation}</p>
+        <p><b>Hình thức vi phạm:</b> ${v.type}</p>
+        <p><b>Mức độ:</b> ${v.severity || ""}</p>
         <p><b>Thời điểm:</b> ${v.time}</p>
         <p><b>Trạng thái:</b> ${v.status}</p>
-        <p><b>Ghi chú:</b> ${v.note || "-"}</p>
+        <p><b>Ghi chú / Biên bản:</b> ${v.notes}</p>
     `;
 }
 
-// Cập nhật chi tiết vi phạm (mock)
-function updateViolation(code) {
-    alert(`✔ Cập nhật thông tin vi phạm cho ${code} (mock)`);
+// FR43 – Cập nhật vi phạm
+function editViolation(id) {
+    const v = violations[id];
+    document.getElementById("editType").value = v.type;
+    document.getElementById("editSeverity").value = v.severity || "";
+    document.getElementById("editNotes").value = v.notes;
+    document.getElementById("editViolationCard").dataset.id = id;
 }
 
-// Phê duyệt vi phạm (mock)
-function approveViolation(code) {
-    alert(`✔ Vi phạm ${code} đã được phê duyệt (mock)`);
+function saveViolation() {
+    const id = document.getElementById("editViolationCard").dataset.id;
+    const v = violations[id];
+    v.type = document.getElementById("editType").value;
+    v.severity = document.getElementById("editSeverity").value;
+    v.notes = document.getElementById("editNotes").value;
+    alert("✔ Thông tin vi phạm đã được lưu (mock)");
+    loadPage("violation_management", "⚠️ Quản lý vi phạm");
 }
 
-// Tìm kiếm thí sinh vi phạm
-function searchStudentViolation() {
-    const keyword = document.getElementById("searchStudentViolation").value.toLowerCase();
-    const rows = document.querySelectorAll("#studentViolationTable tr");
-    rows.forEach(row => {
+// FR45 – Phê duyệt
+function approveViolation(id) {
+    const v = violations[id];
+    v.status = "Đã phê duyệt";
+    v.approver = "Hội đồng thi";
+    v.approveTime = new Date().toLocaleString();
+    alert("✔ Vi phạm đã được phê duyệt (mock)");
+    loadPage("violation_management", "⚠️ Quản lý vi phạm");
+}
+
+// FR47 – Tìm kiếm / lọc
+function searchViolation() {
+    const keyword = document.getElementById("searchViolation").value.toLowerCase();
+    document.querySelectorAll("#violationTable tr").forEach(row => {
         row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
     });
 }
 
-// Mock dữ liệu chứng chỉ
+const functionalUnits = {
+    "FU001": {id:"FU001", name:"Ban coi thi", task:"Quản lý phòng thi", exam:"Kỳ thi tháng 12", status:"Chưa phê duyệt"},
+    "FU002": {id:"FU002", name:"Ban chấm thi", task:"Chấm thi", exam:"Kỳ thi tháng 12", status:"Đã phê duyệt"}
+};
+
+const staffs = {
+    "S001": {id:"S001", name:"Nguyễn Văn A", unit:"Khoa CNTT", functionalUnit:"Ban coi thi", role:"Giám thị", schedule:"Ca 1 - P101", status:"Đã xác nhận"},
+    "S002": {id:"S002", name:"Trần Thị B", unit:"Khoa NN", functionalUnit:"Ban chấm thi", role:"Chấm thi", schedule:"Ca 2 - P102", status:"Chưa tham gia"}
+};
+// FR48, FR49, FR52 – Thêm/Sửa/Phân công
+function addFunctionalUnit() { alert("Mock: Thêm ban chức năng"); }
+function editFunctionalUnit(id) { alert("Mock: Sửa ban " + id); }
+function approveFunctionalUnit(id) {
+    functionalUnits[id].status = "Đã phê duyệt";
+    alert("✔ Ban chức năng đã được phê duyệt");
+    loadPage("exam_staff_management");
+}
+
+function assignSchedule(id) { alert("Mock: Phân công lịch cho " + id); }
+function updateStaffStatus(id) {
+    staffs[id].status = "Đã tham gia";
+    alert("✔ Trạng thái nhân sự đã cập nhật");
+    loadPage("exam_staff_management");
+}
+
+// FR51 – Tra cứu / tìm kiếm
+function searchStaff() {
+    const keyword = document.getElementById("searchStaff").value.toLowerCase();
+    document.querySelectorAll("#staffTable tr").forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+    });
+}
+
+// FR55 – Xuất CSV
+function exportStaffCSV() {
+    let csv = "Họ tên,Đơn vị,Ban chức năng,Vai trò,Ca/Phòng,Trạng thái\n";
+    Object.values(staffs).forEach(s => {
+        csv += `${s.name},${s.unit},${s.functionalUnit},${s.role},${s.schedule || ""},${s.status}\n`;
+    });
+    alert("Mock: Xuất CSV\n" + csv);
+}
+
 const certificates = {
-    "CERT001": {
-        code: "CERT001",
-        name: "Nguyễn Văn A",
-        sbd: "001",
-        exam: "Đợt 1/2025",
-        level: "Bậc 3",
-        issueDate: "15/12/2025",
-        status: "Đã phát hành",
-        note: "",
-        electronicFile: "CERT001.png"
+    "C001": {
+        id:"C001",
+        code:"UEH-2025-001",
+        name:"Nguyễn Văn A",
+        examNumber:"12345",
+        exam:"Kỳ thi tháng 12",
+        level:"C1",
+        issuedDate:"2025-12-22",
+        status:"Chưa phát hành",
+        deliveryMethod:"Nhận tận nơi",
+        address:"123 Đường ABC, Q1, TP.HCM",
+        physicalStatus:"Chưa gửi"
+    },
+    "C002": {
+        id:"C002",
+        code:"UEH-2025-002",
+        name:"Trần Thị B",
+        examNumber:"12346",
+        exam:"Kỳ thi tháng 12",
+        level:"B2",
+        issuedDate:"2025-12-22",
+        status:"Đã phát hành",
+        deliveryMethod:"Nhận tại văn phòng",
+        address:"456 Đường XYZ, Q3, TP.HCM",
+        physicalStatus:"Đang gửi"
     }
 };
 
-// Xem chi tiết chứng chỉ
-function viewCertificateDetail(code) {
-    const c = certificates[code];
-    document.getElementById("certificateDetailCard").innerHTML = `
-        <h3>Chi tiết chứng chỉ: ${c.code}</h3>
-        <p><b>Họ tên:</b> ${c.name}</p>
-        <p><b>SBD:</b> ${c.sbd}</p>
-        <p><b>Kỳ thi:</b> ${c.exam}</p>
-        <p><b>Trình độ:</b> ${c.level}</p>
-        <p><b>Ngày cấp:</b> ${c.issueDate}</p>
-        <p><b>Trạng thái:</b> ${c.status}</p>
-        <p><b>Ghi chú:</b> ${c.note || "-"}</p>
-        ${c.electronicFile ? `<p><b>File điện tử:</b> <a href="${c.electronicFile}" target="_blank">Xem/Download</a></p>` : ""}
-    `;
+// FR57 – Xem chi tiết chứng chỉ
+function viewCertificate(id) {
+    const c = certificates[id];
+    alert(`Chi tiết chứng chỉ:\nHọ tên: ${c.name}\nKỳ thi: ${c.exam}\nTrình độ: ${c.level}\nNgày cấp: ${c.issuedDate}\nTrạng thái: ${c.status}`);
 }
 
-// Phát hành chứng chỉ điện tử (mock)
-function issueCertificate(code) {
-    alert(`✔ Chứng chỉ ${code} đã được phát hành (mock)`);
+// FR56 – Phát hành chứng chỉ điện tử
+function issueCertificate(id) {
+    certificates[id].status = "Đã phát hành";
+    alert(`✔ Chứng chỉ ${certificates[id].code} đã được phát hành`);
+    loadPage("certificate_management");
 }
 
-// Tải xuống chứng chỉ PNG (mock)
-function downloadCertificate(code) {
-    alert(`✔ Tải xuống chứng chỉ ${code} dưới dạng PNG (mock)`);
-}
-
-// Tra cứu chứng chỉ
+// FR59 – Tra cứu chứng chỉ
 function searchCertificate() {
     const keyword = document.getElementById("searchCertificate").value.toLowerCase();
-    const rows = document.querySelectorAll("#certificateTable tr");
-    rows.forEach(row => {
+    document.querySelectorAll("#certificateTable tr").forEach(row => {
         row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
     });
+}
+
+// FR60 – Tải xuống chứng chỉ PNG
+function downloadCertificate(id) {
+    const c = certificates[id];
+    alert(`Mock: Tải xuống chứng chỉ ${c.code} (PNG)`);
 }
 
 // Mock dữ liệu hội đồng thi
@@ -1622,6 +2243,7 @@ function checkAccess(role) {
     return true;
 }
 
+
 // Tra cứu lịch sử hoạt động
 function searchActivity() {
     const keyword = document.getElementById("searchActivity").value.toLowerCase();
@@ -1648,178 +2270,176 @@ function downloadChangeCSV() {
     alert("✔ Xuất lịch sử thay đổi CSV thành công (mock)");
 }
 
-// Mock dữ liệu phản hồi
-const feedbacks = [
-    {id:1, name:"Nguyễn Văn A", role:"Thí sinh", exam:"Đợt 1/2025", content:"Hệ thống đăng ký tốt", status:"Hoàn thành"},
-    {id:2, name:"Trần Thị B", role:"CBTG", exam:"Đợt 1/2025", content:"Thiết bị thi chưa ổn", status:"Chưa hoàn thành"}
+// Mock data
+let surveys = [
+    {id:"SV1", title:"Khảo sát kỳ thi cuối học kỳ", questions:["Bạn đánh giá đề thi thế nào?", "Bạn có gặp khó khăn gì không?"]},
+    {id:"SV2", title:"Khảo sát dịch vụ phòng thi", questions:["Bạn hài lòng với phòng thi không?", "Gợi ý cải thiện"]}
 ];
 
-// Hiển thị danh sách phản hồi
-function renderFeedbackTable() {
-    const tbody = document.getElementById("feedbackTable");
+let surveyResponses = [
+    {
+        id: "R1",
+        exam: "Thi Toán 2025",
+        type: "Thí sinh",
+        date: "2025-12-22",
+        status: "Đã gửi",
+        content: "1. Đề thi vừa sức\n2. Không gặp khó khăn"
+    },
+    {
+        id: "R2",
+        exam: "Thi Anh Văn 2025",
+        type: "CBTG",
+        date: "2025-12-22",
+        status: "Chưa phản hồi",
+        content: "1. Đề thi có phần khó\n2. Giao diện phòng thi tốt"
+    }
+];
+
+
+function createSurvey() {
+    const title = document.getElementById("surveyTitle").value;
+    const questions = document.getElementById("surveyQuestions").value.trim().split("\n");
+    if(!title || questions.length === 0){
+        alert("⚠ Vui lòng nhập tiêu đề và câu hỏi");
+        return;
+    }
+    const id = "SV" + Date.now();
+    surveys.push({id, title, questions});
+    alert("✔ Form khảo sát đã được tạo (mock)");
+    loadPage("phanhoi", "💬 Quản lý phản hồi");
+}
+
+function sendSurveyEmail() {
+    const surveyId = document.getElementById("surveySelect").value;
+    if(!surveyId){
+        alert("⚠ Vui lòng chọn form khảo sát");
+        return;
+    }
+    alert("📧 Email khảo sát đã được gửi (mock)");
+}
+
+function renderSurveyResponses() {
+    const tbody = document.getElementById("surveyResponsesTable");
     tbody.innerHTML = "";
-    feedbacks.forEach(fb => {
-        tbody.innerHTML += `
-        <tr>
-            <td>${fb.name}</td>
-            <td>${fb.role}</td>
-            <td>${fb.exam}</td>
-            <td>${fb.content.length>30? fb.content.substring(0,30)+"...":fb.content}</td>
-            <td>${fb.status}</td>
+    surveyResponses.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${r.exam}</td>
+            <td>${r.type}</td>
+            <td>${r.date}</td>
+            <td>${r.status}</td>
             <td>
-                <button onclick="viewFeedback(${fb.id})">Xem</button>
-                ${fb.status=="Chưa hoàn thành"? `<button onclick="editFeedback(${fb.id})">Sửa</button>` : ""}
+                <button onclick="viewSurveyDetail('${r.id}')">Xem</button>
             </td>
-        </tr>`;
+        `;
+        tbody.appendChild(tr);
     });
 }
 
-// Xem chi tiết phản hồi
-function viewFeedback(id) {
-    const fb = feedbacks.find(f=>f.id===id);
-    document.getElementById("feedbackDetailCard").innerHTML = `
+function viewSurveyDetail(id) {
+    const r = surveyResponses.find(x => x.id === id);
+    document.getElementById("surveyDetailCard").innerHTML = `
         <h3>Chi tiết phản hồi</h3>
-        <p><b>Họ tên:</b> ${fb.name}</p>
-        <p><b>Đối tượng:</b> ${fb.role}</p>
-        <p><b>Kỳ thi:</b> ${fb.exam}</p>
-        <p><b>Nội dung:</b> ${fb.content}</p>
-        <p><b>Trạng thái:</b> ${fb.status}</p>
+        <p><b>Kỳ thi:</b> ${r.exam}</p>
+        <p><b>Đối tượng:</b> ${r.type}</p>
+        <p><b>Ngày gửi:</b> ${r.date}</p>
+        <p><b>Nội dung:</b> ${r.content}</p>
     `;
 }
 
-// Sửa phản hồi
-function editFeedback(id) {
-    const fb = feedbacks.find(f=>f.id===id);
-    document.getElementById("fbName").value = fb.name;
-    document.getElementById("fbRole").value = fb.role;
-    document.getElementById("fbExam").value = fb.exam;
-    document.getElementById("fbContent").value = fb.content;
-    // Khi lưu, ghi đè phản hồi
-    document.getElementById("newFeedbackForm").onsubmit = (e)=>{
-        e.preventDefault();
-        fb.name = document.getElementById("fbName").value;
-        fb.role = document.getElementById("fbRole").value;
-        fb.exam = document.getElementById("fbExam").value;
-        fb.content = document.getElementById("fbContent").value;
-        fb.status = "Hoàn thành";
-        renderFeedbackTable();
-        viewFeedback(fb.id);
-        alert("✔ Phản hồi đã được cập nhật");
-    };
+function analyzeSurvey() {
+    alert("📊 Chuyển tới Dashboard phân tích khảo sát (mock)");
 }
 
-// Thêm phản hồi mới
-function addFeedback() {
-    const name = document.getElementById("fbName").value.trim();
-    const role = document.getElementById("fbRole").value.trim();
-    const exam = document.getElementById("fbExam").value.trim();
-    const content = document.getElementById("fbContent").value.trim();
-    if(!name || !role || !exam || !content) { alert("Điền đầy đủ thông tin!"); return; }
-    const newFb = {
-        id: feedbacks.length + 1,
-        name,
-        role,
-        exam,
-        content,
-        status:"Chưa hoàn thành"
-    };
-    feedbacks.push(newFb);
-    renderFeedbackTable();
-    document.getElementById("newFeedbackForm").reset();
-    alert("✔ Phản hồi mới đã được lưu (mock)");
+function exportSurveyReport(format) {
+    alert(`⬇ Xuất báo cáo khảo sát dưới định dạng ${format.toUpperCase()} (mock)`);
 }
 
-// Xuất CSV
-function exportFeedbackCSV() {
-    let csv = "Họ tên,Đối tượng,Kỳ thi,Nội dung,Trạng thái\n";
-    feedbacks.forEach(fb => {
-        csv += `"${fb.name}","${fb.role}","${fb.exam}","${fb.content}","${fb.status}"\n`;
-    });
-    const blob = new Blob([csv], {type:"text/csv"});
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "feedbacks.csv";
-    link.click();
-}
 
-// Khi load tab
-if(currentPage==="phanhoi") renderFeedbackTable();
-
-// Mock dữ liệu Ban chức năng
-const bans = [
-    {id:1, name:"Ban coi thi", task:"Quản lý phòng thi", exam:"Đợt 1/2025", status:"Chưa phê duyệt", staff:[]},
-    {id:2, name:"Ban chấm thi", task:"Chấm bài", exam:"Đợt 1/2025", status:"Chưa phê duyệt", staff:[]}
-];
-
-// Hiển thị danh sách Ban
-function renderBanTable() {
-    const tbody = document.getElementById("banTable");
-    tbody.innerHTML = "";
-    bans.forEach(b => {
-        tbody.innerHTML += `
-        <tr>
-            <td>${b.name}</td>
-            <td>${b.task}</td>
-            <td>${b.exam}</td>
-            <td>${b.status}</td>
-            <td>
-                <button onclick="viewBan(${b.id})">Xem</button>
-                <button onclick="approveBan(${b.id})">Phê duyệt</button>
-            </td>
-        </tr>`;
-    });
-}
-
-// Xem chi tiết Ban & phân công
-function viewBan(id) {
-    const b = bans.find(x=>x.id===id);
-    let staffList = b.staff.map(s=>`<li>${s.name} - ${s.role} - ${s.task}</li>`).join("");
-    document.getElementById("banDetailCard").innerHTML = `
-        <h3>${b.name} - Kỳ thi ${b.exam}</h3>
-        <p><b>Nhiệm vụ:</b> ${b.task}</p>
-        <p><b>Trạng thái:</b> ${b.status}</p>
-        <h4>Danh sách cán bộ phân công:</h4>
-        <ul>${staffList || "<i>Chưa có cán bộ phân công</i>"}</ul>
-    `;
-}
-
-// Tạo Ban mới
-function addBan() {
-    const name = document.getElementById("banName").value.trim();
-    const task = document.getElementById("banTask").value.trim();
-    const exam = document.getElementById("banExam").value.trim();
-    if(!name || !task || !exam){ alert("Điền đầy đủ thông tin!"); return; }
-    const newBan = {id:bans.length+1, name, task, exam, status:"Chưa phê duyệt", staff:[]};
-    bans.push(newBan);
-    renderBanTable();
-    document.getElementById("newBanForm").reset();
-    alert("✔ Ban chức năng mới đã được tạo (mock)");
-}
-
-// Phê duyệt Ban
-function approveBan(id){
-    const b = bans.find(x=>x.id===id);
-    b.status="Đã phê duyệt";
-    renderBanTable();
-    alert(`✔ Ban ${b.name} đã được phê duyệt`);
-}
-
-// Phân công cán bộ vào Ban
-function assignStaff(banId, name, role, task){
-    const b = bans.find(x=>x.id===banId);
-    b.staff.push({name, role, task});
-    viewBan(banId);
-}
-
-// Khi load tab
-if(currentPage==="banchucnang") renderBanTable();
 
 loadPage("hoso", "Quản lý hồ sơ thí sinh");
-
-
 </script>
+
+
+
+
+
+
+<!-- CHATBOT ICON -->
+<div id="chatbotToggle" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #006571;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+    font-size: 28px;
+    z-index: 1000;
+">
+    <i class="fa-solid fa-comment"></i>
+</div>
+
+<!-- CHATBOT WINDOW -->
+<div id="chatbotWindow" style="
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    max-height: 500px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1000;
+">
+    <!-- HEADER -->
+    <div style="
+        background: #006571;
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    ">
+        <span>Chatbot</span>
+        <span id="closeChat" style="cursor:pointer; font-weight:bold;">✖</span>
+    </div>
+
+    <!-- MESSAGES -->
+    <div id="chatMessages" style="
+        flex: 1;
+        padding: 10px;
+        overflow-y: auto;
+        background: #f4f6f8;
+    ">
+        <div style="text-align:center; color:#999;">Xin chào! Bạn cần trợ giúp gì?</div>
+    </div>
+
+    <!-- INPUT -->
+    <div style="display:flex; border-top:1px solid #ddd;">
+        <input id="chatInput" type="text" placeholder="Nhập tin nhắn..." style="
+            flex: 1;
+            padding: 10px;
+            border:none;
+            outline:none;
+        ">
+        <button id="sendChat" style="
+            padding: 10px;
+            background: #006571;
+            color: white;
+            border:none;
+            cursor:pointer;
+        ">Gửi</button>
+    </div>
+</div>
 
 </body>
 </html>
-
-
