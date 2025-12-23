@@ -447,10 +447,10 @@ function loadPage(page, titleText) {
     </div>
 
     <!-- FR11 – Chi tiết đề -->
-    <div class="card" id="examDetailCard">
-        <h3>Chi tiết đề thi</h3>
-        <p>Chọn đề thi để xem chi tiết</p>
-    </div>
+	<div class="card" id="examDetailCard" style="grid-column:1/-1;">
+	    <h3>Chi tiết đề thi</h3>
+	    <p>Chọn đề thi để xem chi tiết</p>
+	</div>
 <!-- FR08 – Tạo mã đề từ bộ đề gốc -->
 <div class="card">
     <h3>Tạo mã đề từ bộ đề gốc</h3>
@@ -1356,9 +1356,10 @@ const examTests = {
 // FR11 – Xem chi tiết đề
 function viewExamDetail(testCode) {
     const exam = examTests[testCode];
+    const card = document.getElementById("examDetailCard");
 
     if (!exam) {
-        document.getElementById("examDetailCard").innerHTML = `
+        card.innerHTML = `
             <h3>Chi tiết đề thi</h3>
             <p style="color:red;">❌ Không tìm thấy đề thi</p>
         `;
@@ -1367,7 +1368,7 @@ function viewExamDetail(testCode) {
 
     const origin = originalExamSets[exam.originSet];
 
-    document.getElementById("examDetailCard").innerHTML = `
+    card.innerHTML = `
         <h3>Chi tiết đề thi thử: ${exam.code}</h3>
 
         <p><b>Kỳ thi:</b> ${exam.kyThi}</p>
@@ -1398,7 +1399,7 @@ function viewExamDetail(testCode) {
             <b>File đề thi:</b>
             ${
                 exam.examFile
-                ? `<a href="${exam.examFile}" target="_blank">Xem / Tải xuống</a>`
+                ? `<a href="${exam.examFile}" target="_blank">Xem / Tải</a>`
                 : `<span style="color:#888;">Chưa có</span>`
             }
         </p>
@@ -1406,12 +1407,16 @@ function viewExamDetail(testCode) {
             <b>File đáp án:</b>
             ${
                 exam.answerFile
-                ? `<a href="${exam.answerFile}" target="_blank">Xem / Tải xuống</a>`
+                ? `<a href="${exam.answerFile}" target="_blank">Xem / Tải</a>`
                 : `<span style="color:#888;">Chưa có</span>`
             }
         </p>
     `;
+
+    // 🔥 QUAN TRỌNG: auto scroll
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
 
 
 
@@ -1464,16 +1469,6 @@ function searchExam() {
     });
 }
 
-// FR13 – Tải PDF
-function downloadPDF(code) {
-    const e = examTests[code];
-    if (!e.file) {
-        alert("✔ Tải thành công");
-        return;
-    }
-    alert(`⬇ Đang tải file ${e.file} (mock)`);
-}
-
 // FR08 – Tạo mã đề từ bộ đề gốc
 function generateFromOriginal() {
     const originId = document.getElementById("originSet").value;
@@ -1515,7 +1510,7 @@ function generateFromOriginal() {
 
 function downloadFile(filename, status) {
     if (status !== "Đã duyệt") {
-        alert("⛔ Đề chưa được duyệt, không thể tải file");
+        alert("✔ Tải thành công");
         return;
     }
     alert(`⬇ Đang tải ${filename} (mock)`);
@@ -2481,6 +2476,7 @@ loadPage("hoso", "Quản lý hồ sơ thí sinh");
 
 </body>
 </html>
+
 
 
 
