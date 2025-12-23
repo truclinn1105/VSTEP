@@ -1354,17 +1354,65 @@ const examTests = {
 };
 
 // FR11 – Xem chi tiết đề
-function viewExamDetail(examId) {
-    const e = exams[examId];
+function viewExamDetail(testCode) {
+    const exam = examTests[testCode];
+
+    if (!exam) {
+        document.getElementById("examDetailCard").innerHTML = `
+            <h3>Chi tiết đề thi</h3>
+            <p style="color:red;">❌ Không tìm thấy đề thi</p>
+        `;
+        return;
+    }
+
+    const origin = originalExamSets[exam.originSet];
+
     document.getElementById("examDetailCard").innerHTML = `
-        <h3>Chi tiết đề thi: ${examId}</h3>
-        <p><b>Tên đề:</b> ${e.name}</p>
-        <p><b>Đợt thi:</b> ${e.dotthi}</p>
-        <p><b>Trạng thái:</b> ${e.status}</p>
-        <p><b>Ma trận đề:</b> ${e.matrix}</p>
-        <p><b>Cấu trúc kỹ năng:</b> ${e.structure}</p>
+        <h3>Chi tiết đề thi thử: ${exam.code}</h3>
+
+        <p><b>Kỳ thi:</b> ${exam.kyThi}</p>
+        <p><b>Trình độ:</b> ${exam.level}</p>
+        <p><b>Cấu trúc:</b> ${exam.structure}</p>
+        <p><b>Số câu hỏi:</b> ${exam.questions}</p>
+        <p><b>Trạng thái:</b> ${exam.status}</p>
+
+        <hr>
+
+        <h4>📦 Bộ đề gốc</h4>
+        ${
+            origin
+            ? `
+                <p><b>Mã bộ đề:</b> ${origin.id}</p>
+                <p><b>Tên bộ đề:</b> ${origin.name}</p>
+                <p><b>Cấu trúc:</b> ${origin.structure}</p>
+                <p><b>Trình độ:</b> ${origin.level}</p>
+                <p><b>Tổng số câu:</b> ${origin.totalQuestions}</p>
+              `
+            : `<p style="color:red;">❌ Không tìm thấy bộ đề gốc</p>`
+        }
+
+        <hr>
+
+        <h4>📄 Tài liệu đính kèm</h4>
+        <p>
+            <b>File đề thi:</b>
+            ${
+                exam.examFile
+                ? `<a href="${exam.examFile}" target="_blank">Xem / Tải xuống</a>`
+                : `<span style="color:#888;">Chưa có</span>`
+            }
+        </p>
+        <p>
+            <b>File đáp án:</b>
+            ${
+                exam.answerFile
+                ? `<a href="${exam.answerFile}" target="_blank">Xem / Tải xuống</a>`
+                : `<span style="color:#888;">Chưa có</span>`
+            }
+        </p>
     `;
 }
+
 
 
 // FR09 – Sửa đề
@@ -2433,6 +2481,7 @@ loadPage("hoso", "Quản lý hồ sơ thí sinh");
 
 </body>
 </html>
+
 
 
 
