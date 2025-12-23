@@ -1354,28 +1354,27 @@ const examTests = {
 };
 
 // FR11 – Xem chi tiết đề
-function viewExamDetail(code) {
-    const e = examTests[code];
+function viewExamDetail(examId) {
+    const e = exams[examId];
+
+    if (!e) {
+        document.getElementById("examDetailCard").innerHTML = `
+            <h3>Chi tiết đề thi</h3>
+            <p style="color:red;">❌ Không tìm thấy thông tin đề thi</p>
+        `;
+        return;
+    }
+
     document.getElementById("examDetailCard").innerHTML = `
-        <h3>Chi tiết đề thi ${e.code}</h3>
-        <p><b>Kỳ thi:</b> ${e.kyThi}</p>
-        <p><b>Cấu trúc:</b> ${e.structure}</p>
-        <p><b>Trình độ:</b> ${e.level}</p>
+        <h3>Chi tiết đề thi: ${examId}</h3>
+        <p><b>Tên đề:</b> ${e.name}</p>
+        <p><b>Đợt thi:</b> ${e.dotthi}</p>
         <p><b>Trạng thái:</b> ${e.status}</p>
-
-        <p><b>File đề:</b>
-            ${e.examFile
-                ? `<button onclick="downloadFile('${e.examFile}', '${e.status}')">Tải</button>`
-                : "Chưa có"}
-        </p>
-
-        <p><b>File đáp án:</b>
-            ${e.answerFile
-                ? `<button onclick="downloadFile('${e.answerFile}', '${e.status}')">Tải</button>`
-                : "Chưa có"}
-        </p>
+        <p><b>Ma trận đề:</b> ${e.matrix}</p>
+        <p><b>Cấu trúc kỹ năng:</b> ${e.structure}</p>
     `;
 }
+
 
 // FR09 – Sửa đề
 function editExam(code) {
@@ -1427,13 +1426,20 @@ function searchExam() {
 }
 
 // FR13 – Tải PDF
-function downloadPDF(code) {
-    const e = examTests[code];
-    if (!e.file) {
-        alert("⛔ Đề chưa được phê duyệt, không thể tải");
+function downloadExam(examId) {
+    const e = exams[examId];
+
+    if (e.status !== "Đã duyệt") {
+        alert("❌ Đề thi chưa được duyệt");
         return;
     }
-    alert(`⬇ Đang tải file ${e.file} (mock)`);
+
+    if (!e.file) {
+        alert("❌ Không tìm thấy file đề thi");
+        return;
+    }
+
+    window.open(e.file, "_blank");
 }
 
 // FR08 – Tạo mã đề từ bộ đề gốc
@@ -2443,6 +2449,7 @@ loadPage("hoso", "Quản lý hồ sơ thí sinh");
 
 </body>
 </html>
+
 
 
 
