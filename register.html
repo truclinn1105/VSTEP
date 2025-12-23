@@ -139,9 +139,10 @@ body{
         <button type="submit" class="btn-submit">Đăng ký</button>
 
         <div class="note">
-            • Thí sinh: tài khoản được <b>kích hoạt ngay</b><br>
-            • Cán bộ: tài khoản ở trạng thái <b>chờ Phòng CNTT / P.ĐTTX xác thực</b>
+            • Thí sinh & cán bộ tham gia kỳ thi: tài khoản ở trạng thái <b>chờ xác thực</b><br>
+            • Tài khoản sẽ được kích hoạt sau khi được <b>P.ĐTTX / Phòng CNTT</b> phê duyệt
         </div>
+
 
         <div id="message" class="message"></div>
     </form>
@@ -168,15 +169,13 @@ document.getElementById("registerForm").addEventListener("submit", function(e){
         return;
     }
 
-    if(role === "candidate"){
-        message.style.color = "green";
-        message.innerText = "✅ Đăng ký thành công. Tài khoản đã được kích hoạt.";
-    }else if(role === "staff"){
-        message.style.color = "#ff7f50";
-        message.innerText = "⏳ Đăng ký thành công. Tài khoản đang chờ xác thực bởi Phòng CNTT / P.ĐTTX.";
-    }
-});
+    message.style.color = "#ff7f50";
+    message.innerText =
+        "⏳ Đăng ký thành công. Tài khoản đang ở trạng thái CHỜ XÁC THỰC. " +
+        "Vui lòng chờ P.ĐTTX / Phòng CNTT phê duyệt.";
+
 </script>
 
 </body>
 </html>
+
