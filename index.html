@@ -1356,16 +1356,22 @@ const examTests = {
 // FR11 – Xem chi tiết đề
 function viewExamDetail(examId) {
     const e = exams[examId];
+    const card = document.getElementById("examDetailCard");
+
+    if (!card) {
+        alert("❌ Không tìm thấy vùng hiển thị chi tiết đề thi");
+        return;
+    }
 
     if (!e) {
-        document.getElementById("examDetailCard").innerHTML = `
+        card.innerHTML = `
             <h3>Chi tiết đề thi</h3>
-            <p style="color:red;">❌ Không tìm thấy thông tin đề thi</p>
+            <p style="color:red;">❌ Không tìm thấy đề thi</p>
         `;
         return;
     }
 
-    document.getElementById("examDetailCard").innerHTML = `
+    card.innerHTML = `
         <h3>Chi tiết đề thi: ${examId}</h3>
         <p><b>Tên đề:</b> ${e.name}</p>
         <p><b>Đợt thi:</b> ${e.dotthi}</p>
@@ -1374,6 +1380,7 @@ function viewExamDetail(examId) {
         <p><b>Cấu trúc kỹ năng:</b> ${e.structure}</p>
     `;
 }
+
 
 
 // FR09 – Sửa đề
@@ -2449,6 +2456,7 @@ loadPage("hoso", "Quản lý hồ sơ thí sinh");
 
 </body>
 </html>
+
 
 
 
