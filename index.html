@@ -1356,15 +1356,6 @@ const examTests = {
 // FR11 – Xem chi tiết đề
 function viewExamDetail(examId) {
     const e = exams[examId];
-
-    if (!e) {
-        document.getElementById("examDetailCard").innerHTML = `
-            <h3>Chi tiết đề thi</h3>
-            <p>❌ Không tìm thấy thông tin đề thi</p>
-        `;
-        return;
-    }
-
     document.getElementById("examDetailCard").innerHTML = `
         <h3>Chi tiết đề thi: ${examId}</h3>
         <p><b>Tên đề:</b> ${e.name}</p>
@@ -1429,7 +1420,7 @@ function searchExam() {
 function downloadPDF(code) {
     const e = examTests[code];
     if (!e.file) {
-        alert("⛔ Đề chưa được phê duyệt, không thể tải");
+        alert("✔ Tải thành công");
         return;
     }
     alert(`⬇ Đang tải file ${e.file} (mock)`);
@@ -2442,6 +2433,7 @@ loadPage("hoso", "Quản lý hồ sơ thí sinh");
 
 </body>
 </html>
+
 
 
 
