@@ -97,6 +97,36 @@ body{
     box-shadow:0 15px 35px rgba(0,0,0,0.35);
     margin-top:10px; /* nhích hình xuống */
 }
+.btn-container{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    margin-top:20px;
+}
+
+.btn-register {
+    display: flex;               /* chuyển thành flex */
+    align-items: center;         /* canh giữa theo chiều dọc */
+    justify-content: center;     /* canh giữa theo chiều ngang */
+    padding: 16px 45px;          /* giữ padding như cũ */
+    background: #ffffff;
+    color: #0b5d63;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-family: 'Rokkitt', serif;
+    text-align: center;          /* an toàn cho chữ nhiều dòng */
+}
+.btn-register:hover{
+    background: #ff7f50;
+    color: #ffffff;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+
 
 /* ===== Responsive ===== */
 @media(max-width:900px){
@@ -129,18 +159,25 @@ body{
 
         <!-- Left -->
         <div>
-            <h1>
-                HỆ THỐNG QUẢN LÝ TỔ CHỨC KỲ THI ĐÁNH GIÁ NĂNG LỰC NGOẠI NGỮ THEO KHUNG BẬC 3-5 TRÊN MÁY TÍNH THEO KHUNG NĂNG LỰC NGOẠI NGỮ 6 BẬC DÙNG CHO VIỆT NAM
-            </h1>
+    <h1>
+        HỆ THỐNG QUẢN LÝ TỔ CHỨC KỲ THI ĐÁNH GIÁ NĂNG LỰC NGOẠI NGỮ THEO KHUNG BẬC 3-5 TRÊN MÁY TÍNH THEO KHUNG NĂNG LỰC NGOẠI NGỮ 6 BẬC DÙNG CHO VIỆT NAM
+    </h1>
 
-            <a href="login.html" class="btn-login">
-                Đăng nhập
-            </a>
-        </div>
+    <div class="btn-container">
+        <a href="login.html" class="btn-login">
+            Đăng nhập
+        </a>
+
+        <a href="register.html" class="btn-login btn-register">
+            Đăng ký
+        </a>
+    </div>
+</div>
+
 
         <!-- Right -->
         <div>
-            <img src="HERO.jpg" alt="Sinh viên UEH">
+            <img src="HERO.JPG" alt="Sinh viên UEH">
         </div>
 
     </div>
@@ -148,4 +185,3 @@ body{
 </div>
 </body>
 </html>
-
