@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng ký tài khoản | VSTEP UEH</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Francois+One&family=Rokkitt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Rokkitt', serif;
+}
+
+body{
+    min-height:100vh;
+    background:#006571;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.register-box{
+    background:#fff;
+    width:100%;
+    max-width:480px;
+    padding:40px;
+    border-radius:16px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.35);
+}
+
+.register-box h1{
+    font-family:'Francois One', sans-serif;
+    text-align:center;
+    color:#0b5d63;
+    margin-bottom:25px;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    font-weight:600;
+    margin-bottom:6px;
+    display:block;
+    color:#0b5d63;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    outline:none;
+    border-color:#006571;
+}
+
+.note{
+    font-size:0.9rem;
+    color:#555;
+    margin-top:10px;
+}
+
+.btn-submit{
+    width:100%;
+    padding:14px;
+    background:#006571;
+    color:white;
+    font-size:1.1rem;
+    font-weight:600;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:20px;
+}
+
+.btn-submit:hover{
+    background:#ff7f50;
+}
+
+.message{
+    margin-top:15px;
+    font-weight:600;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="register-box">
+    <h1>Đăng ký tài khoản</h1>
+
+    <form id="registerForm">
+        <div class="form-group">
+            <label>Họ và tên *</label>
+            <input type="text" id="fullname" required>
+        </div>
+
+        <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="email" placeholder="example@ueh.edu.vn" required>
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại *</label>
+            <input type="tel" id="phone" required>
+        </div>
+
+        <div class="form-group">
+            <label>Vai trò *</label>
+            <select id="role" required>
+                <option value="">-- Chọn vai trò --</option>
+                <option value="candidate">Thí sinh</option>
+                <option value="staff">Cán bộ tham gia kỳ thi</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Mật khẩu *</label>
+            <input type="password" id="password" required>
+        </div>
+
+        <div class="form-group">
+            <label>Xác nhận mật khẩu *</label>
+            <input type="password" id="confirmPassword" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Đăng ký</button>
+
+        <div class="note">
+            • Thí sinh: tài khoản được <b>kích hoạt ngay</b><br>
+            • Cán bộ: tài khoản ở trạng thái <b>chờ Phòng CNTT / P.ĐTTX xác thực</b>
+        </div>
+
+        <div id="message" class="message"></div>
+    </form>
+</div>
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const role = document.getElementById("role").value;
+    const password = document.getElementById("password").value;
+    const confirm = document.getElementById("confirmPassword").value;
+    const message = document.getElementById("message");
+
+    if(password.length < 6){
+        message.style.color = "red";
+        message.innerText = "❌ Mật khẩu phải từ 6 ký tự trở lên";
+        return;
+    }
+
+    if(password !== confirm){
+        message.style.color = "red";
+        message.innerText = "❌ Mật khẩu xác nhận không khớp";
+        return;
+    }
+
+    if(role === "candidate"){
+        message.style.color = "green";
+        message.innerText = "✅ Đăng ký thành công. Tài khoản đã được kích hoạt.";
+    }else if(role === "staff"){
+        message.style.color = "#ff7f50";
+        message.innerText = "⏳ Đăng ký thành công. Tài khoản đang chờ xác thực bởi Phòng CNTT / P.ĐTTX.";
+    }
+});
+</script>
+
+</body>
+</html>
